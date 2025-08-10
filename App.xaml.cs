@@ -1,13 +1,6 @@
-﻿using Spending.Helpers;
-using Spending.Services;
-using Spending.Views;
-using System;
-using System.Collections.Generic;
-using System.Configuration;
-using System.Data;
+﻿using JuanNotTheHuman.Spending.Helpers;
+using JuanNotTheHuman.Spending.Services;
 using System.Globalization;
-using System.Linq;
-using System.Threading.Tasks;
 using System.Windows;
 
 namespace Spending
@@ -19,8 +12,8 @@ namespace Spending
     {
         protected override void OnStartup(StartupEventArgs e)
         {
-            CultureInfo.DefaultThreadCurrentCulture = new CultureInfo(ApplicationCultureInfoHelper.Get());
-            CultureInfo.DefaultThreadCurrentUICulture = new CultureInfo(ApplicationCultureInfoHelper.Get());
+            CultureInfo.DefaultThreadCurrentCulture = new CultureInfo(CultureInfoHelper.Get());
+            CultureInfo.DefaultThreadCurrentUICulture = new CultureInfo(CultureInfoHelper.Get());
             LocalizationService.Instance.Refresh();
             base.OnStartup(e);
         }

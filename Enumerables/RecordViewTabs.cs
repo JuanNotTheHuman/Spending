@@ -5,9 +5,14 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace Spending.Enumerables
+namespace JuanNotTheHuman.Spending.Enumerables
 {
-    public enum RecordViewTabs
+    /**
+     * <summary>
+     * An Enumeration representing the tabs available in the record view.
+     * </summary>
+     */
+    internal enum RecordViewTabs
     {
         [Display(ResourceType = typeof(Resources.Resources), Name = "RecordViewTab_Overview")]
         Overview,

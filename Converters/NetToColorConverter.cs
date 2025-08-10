@@ -7,10 +7,20 @@ using System.Threading.Tasks;
 using System.Windows.Data;
 using System.Windows.Media;
 
-namespace Spending.Converters
+namespace JuanNotTheHuman.Spending.Converters
 {
-    public class NetToColorConverter : IValueConverter
+    /**
+     * <summary>
+     * Converts a decimal net value to a color brush.
+     * </summary>
+     */
+    internal class NetToColorConverter : IValueConverter
     {
+        /**
+         * <summary>
+         * Converts a decimal net value to a color brush.
+         * </summary>
+         */
         public object Convert(object value, Type targetType, object parameter, CultureInfo culture)
         {
             if (value is decimal netValue)
@@ -30,7 +40,11 @@ namespace Spending.Converters
             }
             return Brushes.Black;
         }
-
+        /**
+         * <summary>
+         * Converts a color brush back to a decimal net value.
+         * </summary>
+         */
         public object ConvertBack(object value, Type targetType, object parameter, CultureInfo culture)
         {
             if(value is SolidColorBrush color)

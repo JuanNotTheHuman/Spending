@@ -1,16 +1,22 @@
-﻿using Spending.Enumerables;
+﻿using JuanNotTheHuman.Spending.Enumerables;
 using System;
-using System.Collections.Generic;
 using System.Globalization;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using System.Windows.Data;
 
-namespace Spending.Converters
+namespace JuanNotTheHuman.Spending.Converters
 {
+    /**
+     * <summary>
+     * Converts a RecordType to a boolean indicating whether it matches the selected type.
+     * </summary>
+     */
     internal class NewRecordSelectedTypeConverter : IValueConverter
     {
+        /**
+         * <summary>
+         * Converts a RecordType to a boolean indicating whether it matches the selected type.
+         * </summary>
+         */
         public object Convert(object value, Type targetType, object parameter, CultureInfo culture)
         {
             if(value is RecordType recordType)
@@ -22,7 +28,11 @@ namespace Spending.Converters
             }
             return false;
         }
-
+        /**
+         * <summary>
+         * Converts a boolean indicating whether the record type is selected back to a RecordType.
+         * </summary>
+         */
         public object ConvertBack(object value, Type targetType, object parameter, CultureInfo culture)
         {
             if (value is bool isSelected && isSelected && parameter is string param)

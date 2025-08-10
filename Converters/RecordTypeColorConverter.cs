@@ -1,17 +1,23 @@
-﻿using Spending.Enumerables;
+﻿using JuanNotTheHuman.Spending.Enumerables;
 using System;
-using System.Collections.Generic;
 using System.Globalization;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using System.Windows.Data;
 using System.Windows.Media;
 
-namespace Spending.Converters
+namespace JuanNotTheHuman.Spending.Converters
 {
+    /**
+     * <summary>
+     * Converts a RecordType to a corresponding color.
+     * </summary>
+     */
     internal class RecordTypeColorConverter : IValueConverter
     {
+        /**
+         * <summary>
+         * Converts a RecordType to a SolidColorBrush.
+         * </summary>
+         */
         public object Convert(object value, Type targetType, object parameter, CultureInfo culture)
         {
             if (value is RecordType recordType)
@@ -27,7 +33,11 @@ namespace Spending.Converters
             }
             return Brushes.Gray;
         }
-
+        /**
+         * <summary>
+         * Converts a SolidColorBrush back to a RecordType.
+         * </summary>
+         */
         public object ConvertBack(object value, Type targetType, object parameter, CultureInfo culture)
         {
             if(value is SolidColorBrush brush)

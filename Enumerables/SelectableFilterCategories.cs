@@ -1,8 +1,13 @@
 ﻿using System.ComponentModel.DataAnnotations;
 
-namespace Spending.Enumerables
+namespace JuanNotTheHuman.Spending.Enumerables
 {
-    public enum SelectableFilterCategories
+    /**
+     * <summary>
+     * An Enumeration representing various categories of spending for selectable filters.
+     * </summary>
+     */
+    internal enum SelectableFilterCategories
     {
         [Display(ResourceType = typeof(Resources.Resources), Name = "CategoryFood")]
         Food,

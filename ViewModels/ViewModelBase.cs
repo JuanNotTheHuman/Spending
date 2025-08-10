@@ -1,9 +1,14 @@
 ﻿using System.ComponentModel;
 using System.Runtime.CompilerServices;
 
-namespace Spending.ViewModels
+namespace JuanNotTheHuman.Spending.ViewModels
 {
-    public class ViewModelBase : INotifyPropertyChanged
+    /**
+     * <summary>
+     * A base class for view models that implements INotifyPropertyChanged.
+     * </summary>
+     */
+    internal class ViewModelBase : INotifyPropertyChanged
     {
         public event PropertyChangedEventHandler PropertyChanged;
         protected void OnPropertyChanged([CallerMemberName]string propertyName=null)

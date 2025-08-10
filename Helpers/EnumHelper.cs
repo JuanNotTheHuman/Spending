@@ -1,13 +1,19 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using Spending.Enumerables;
-namespace Spending.Helpers
+using JuanNotTheHuman.Spending.Enumerables;
+namespace JuanNotTheHuman.Spending.Helpers
 {
-    public static class EnumHelper
+    /**
+     * <summary>
+     * A helper class for working with enumerations.
+     * </summary>
+     */
+    internal static class EnumHelper
     {
+        /**
+         * <summary>
+         * An array of all the categories defined in the Category enumeration.
+         * </summary>
+         */
         public static Array Categories => Enum.GetValues(typeof(Category));
     }
 }

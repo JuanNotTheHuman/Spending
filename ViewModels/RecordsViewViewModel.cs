@@ -1,21 +1,22 @@
-﻿using Spending.Commands;
-using Spending.Enumerables;
-using Spending.Models;
-using Spending.Services;
-using Spending.Views;
+﻿using JuanNotTheHuman.Spending.Commands;
+using JuanNotTheHuman.Spending.Enumerables;
+using JuanNotTheHuman.Spending.Models;
+using JuanNotTheHuman.Spending.Services;
+using JuanNotTheHuman.Spending.Views;
 using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
-using System.Diagnostics;
 using System.Linq;
-using System.Security.Cryptography;
-using System.Text;
-using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Input;
 
-namespace Spending.ViewModels
+namespace JuanNotTheHuman.Spending.ViewModels
 {
+    /**
+     * <summary>
+     * ViewModel for the RecordsView.
+     * </summary>
+     */
     internal class RecordsViewViewModel : ViewModelBase
     {
         private decimal _thisMonthNet;
@@ -26,6 +27,11 @@ namespace Spending.ViewModels
         private RecordViewModel _editRecord;
         private SelectableFilterCategories _selectedCategory;
         private RecordViewTabs _selectedTab = RecordViewTabs.Overview;
+        /**
+         * <summary>
+         * Gets or sets the net amount for the current month.
+         * </summary>
+         */
         public decimal ThisMonthNet
         {
             get => _thisMonthNet;
@@ -38,6 +44,11 @@ namespace Spending.ViewModels
                 }
             }
         }
+        /**
+         * <summary>
+         * Gets or sets the income for the current month.
+         * </summary>
+         */
         public decimal ThisMonthIncome
         {
             get => _thisMonthIncome;
@@ -50,6 +61,11 @@ namespace Spending.ViewModels
                 }
             }
         }
+        /**
+         * <summary>
+         * Gets or sets the expense for the current month.
+         * </summary>
+         */
         public decimal ThisMonthExpense
         {
             get => _thisMonthExpense;
@@ -62,6 +78,11 @@ namespace Spending.ViewModels
                 }
             }
         }
+        /**
+         * <summary>
+         * Gets or sets the total balance across all records.
+         * </summary>
+         */
         public decimal TotalBalance
         {
             get => _totalBalance;
@@ -74,14 +95,59 @@ namespace Spending.ViewModels
                 }
             }
         }
+        /**
+         * <summary>
+         * Gets the amount of income transactions for the current month.
+         * </summary>
+         */
         public int ThisMonthIncomeTransactionAmount => MonthlyRecords.Where(mr => mr.Date.Month == DateTime.Now.Month && mr.Date.Year == DateTime.Now.Year).SelectMany(mr => mr.DailyRecords).SelectMany(dr => dr.Records).Count(r => r.Type == RecordType.Income);
+        /**
+         * <summary>
+         * Gets the text representation of the income transactions for the current month.
+         * </summary>
+         */
         public string ThisMonthIncomeTransactionText => string.Format(Resources.Resources.thisMonthIncomeTransactions, ThisMonthIncomeTransactionAmount);
+        /**
+         * <summary>
+         * Gets the amount of expense transactions for the current month.
+         * </summary>
+         */
         public int ThisMonthExpenseTransactionAmount => MonthlyRecords.Where(mr => mr.Date.Month == DateTime.Now.Month && mr.Date.Year == DateTime.Now.Year).SelectMany(mr => mr.DailyRecords).SelectMany(dr => dr.Records).Count(r => r.Type == RecordType.Expense);
+        /**
+         * <summary>
+         * Gets the text representation of the expense transactions for the current month.
+         * </summary>
+         */
         public string ThisMonthExpenseTransactionText => string.Format(Resources.Resources.thisMonthExpenseTransactions, ThisMonthExpenseTransactionAmount);
+        /**
+         * <summary>
+         * Gets the total number of transactions across all records.
+         * </summary>
+         */
         public int TotalTransactionAmount => MonthlyRecords.SelectMany(mr => mr.DailyRecords).SelectMany(mr => mr.Records).Count();
+        /**
+         * <summary>
+         * Gets the text representation of the total transactions.
+         * </summary>
+         */
         public string TotalTransactionText => string.Format(Resources.Resources.TotalTransactions, TotalTransactionAmount);
+        /**
+         * <summary>
+         * Indicates whether there are no records to display.
+         * </summary>
+         */
         public bool IsEmpty => MonthlyRecords.Count() == 0;
+        /**
+         * <summary>
+         * Gets or sets the collection of monthly records.
+         * </summary>
+         */
         public ObservableCollection<MonthlyRecords> MonthlyRecords { get; set; }
+        /**
+         * <summary>
+         * Command to switch between tabs in the records view.
+         * </summary>
+         */
         public ICommand SwitchTabCommand => new RelayCommand<string>((tab) =>
         {
             if (Enum.TryParse(tab, out RecordViewTabs selectedTab))
@@ -89,6 +155,11 @@ namespace Spending.ViewModels
                 SelectedTab = selectedTab;
             }
         });
+        /**
+         * <summary>
+         * Command to add a new record.
+         * </summary>
+         */
         public ICommand AddRecordCommand => new RelayCommand(() =>
         {
             _ = DatabaseService.AddRecordAsync(NewRecord.GetRecord());
@@ -97,6 +168,11 @@ namespace Spending.ViewModels
             LoadData();
             OnPropertyChanged(nameof(IsEmpty));
         });
+        /**
+         * <summary>
+         * A view model for the records view, representing the a new record to add to the database.
+         * </summary>
+         */
         public RecordViewModel NewRecord
         {
             get => _newRecord;
@@ -109,6 +185,11 @@ namespace Spending.ViewModels
                 }
             }
         }
+        /**
+         * <summary>
+         * A view model for the records view, representing the record to edit.
+         * </summary>
+         */
         public RecordViewModel EditRecord
         {
             get => _editRecord;
@@ -121,6 +202,11 @@ namespace Spending.ViewModels
                 }
             }
         }
+        /**
+         * <summary>
+         * The currently selected tab in the records view.
+         * </summary>
+         */
         public RecordViewTabs SelectedTab
         {
             get => _selectedTab;
@@ -133,6 +219,11 @@ namespace Spending.ViewModels
                 }
             }
         }
+        /**
+         * <summary>
+         * The currently selected category for filtering records.
+         * </summary>
+         */
         public SelectableFilterCategories SelectedCategory
         {
             get => _selectedCategory;
@@ -220,6 +311,11 @@ namespace Spending.ViewModels
             TotalBalance = await DatabaseService.GetTotalBalance();
             ReloadDisplay();
         }
+        /**
+         * <summary>
+         * The command used to delete a record.
+         * </summary>
+         */
         public ICommand DeleteRecordCommand => new RelayCommand<RecordViewModel>((record) =>
         {
             if (NotificationService.AskConfirmation("Delete Record", "Are you sure you want to delete this record?"))
@@ -230,11 +326,21 @@ namespace Spending.ViewModels
                 NotificationService.ShowNotification("Record Deleted", "The record has been successfully deleted.");
             }
         });
+        /**
+         * <summary>
+         * The command used to edit a record.
+         * </summary>
+         */
         public ICommand EditRecordCommand => new RelayCommand<RecordViewModel>((record) =>
         {
             SelectedTab = RecordViewTabs.EditRecord;
             EditRecord = record;
         });
+        /**
+         * <summary>
+         * The command used to submit the edited record.
+         * </summary>
+         */
         public ICommand EditRecordSubmitCommand => new RelayCommand(() =>
         {
             SelectedTab = RecordViewTabs.Overview;
@@ -243,10 +349,20 @@ namespace Spending.ViewModels
             LoadData();
             EditRecord = null;
         });
+        /**
+         * <summary>
+         * The command used to navigate to the settings view.
+         * </summary>
+         */
         public ICommand NavigateToSettingsCommand => new RelayCommand(() =>
         {
             NavigationService.Navigate(new SettingsView());
         });
+        /**
+         * <summary>
+         * Reloads the display of the records view.
+         * </summary>
+         */
         public void ReloadDisplay()
         {
             OnPropertyChanged(nameof(MonthlyRecords));

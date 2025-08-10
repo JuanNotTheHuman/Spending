@@ -1,7 +1,6 @@
 ﻿using Microsoft.Data.Sqlite;
-using Microsoft.Win32;
-using Spending.Enumerables;
-using Spending.Models;
+using JuanNotTheHuman.Spending.Enumerables;
+using JuanNotTheHuman.Spending.Models;
 using System;
 using System.Collections.Generic;
 using System.IO;
@@ -10,9 +9,14 @@ using System.Text;
 using System.Threading.Tasks;
 using System.Windows;
 
-namespace Spending.Services
+namespace JuanNotTheHuman.Spending.Services
 {
-    public static class DatabaseService
+    /**
+     * <summary>
+     * A service for managing database operations related to spending records.
+     * </summary>
+     */
+    internal static class DatabaseService
     {
         static DatabaseService()
         {
@@ -32,6 +36,11 @@ namespace Spending.Services
                 command.ExecuteNonQuery();
             }
         }
+        /**
+         * <summary>
+         * A method to retrieve all records from the database asynchronously.
+         * </summary>
+         */
         public static async Task<List<Record>> GetRecordsAsync()
         {
             using (var connection = new SqliteConnection("Data Source=spending.db"))
@@ -59,6 +68,12 @@ namespace Spending.Services
                 return records;
             }
         }
+        /**
+         * <summary>
+         * A method to retrieve records by category asynchronously.
+         * </summary>
+         * <param name="category">The category to filter records by.</param>
+         */
         public static async Task<List<Record>> GetRecordsByCategoryAsync(Category category)
         {
             using (var connection = new SqliteConnection("Data Source=spending.db"))
@@ -87,6 +102,12 @@ namespace Spending.Services
                 return records;
             }
         }
+        /**
+         * <summary>
+         * A method to retrieve records by type asynchronously.
+         * </summary>
+         * <param name="type">The type of records to filter by.</param>
+         */
         public static async Task<List<Record>> GetRecordsByTypeAsync(RecordType type)
         {
             using (var connection = new SqliteConnection("Data Source=spending.db"))
@@ -115,6 +136,12 @@ namespace Spending.Services
                 return records;
             }
         }
+        /**
+         * <summary>
+         * A method to edit an existing record in the database asynchronously.
+         * </summary>
+         * <param name="record">The record to edit.</param>
+         */
         public static async Task EditRecordAsync(Record record)
         {
             using (var connection = new SqliteConnection("Data Source=spending.db"))
@@ -134,6 +161,12 @@ namespace Spending.Services
                 await command.ExecuteNonQueryAsync();
             }
         }
+        /**
+         * <summary>
+         * A method to add a new record to the database asynchronously.
+         * </summary>
+         * <param name="record">The record to add.</param>
+         */
         public static async Task AddRecordAsync(Record record)
         {
             using (var connection = new SqliteConnection("Data Source=spending.db"))
@@ -151,6 +184,12 @@ namespace Spending.Services
                 await command.ExecuteNonQueryAsync();
             }
         }
+        /**
+         * <summary>
+         * A method to delete a record from the database asynchronously.
+         * </summary>
+         * <param name="record">The record to delete.</param>
+         */
         public static async Task DeleteRecordAsync(Record record)
         {
             using (var connection = new SqliteConnection("Data Source=spending.db"))
@@ -162,6 +201,12 @@ namespace Spending.Services
                 await command.ExecuteNonQueryAsync();
             }
         }
+        /**
+         * <summary>
+         * A method to delete a record by its ID asynchronously.
+         * </summary>
+         * <param name="id">The ID of the record to delete.</param>
+         */
         public static async Task DeleteRecordAsync(int id)
         {
             using (var connection = new SqliteConnection("Data Source=spending.db"))
@@ -173,6 +218,11 @@ namespace Spending.Services
                 await command.ExecuteNonQueryAsync();
             }
         }
+        /**
+         * <summary>
+         * A method to get the current month's net amount (income - expenses) asynchronously.
+         * </summary>
+         */
         public static async Task<decimal> GetCurrentMonthNet()
         {
             var records = await GetRecordsAsync();
@@ -182,6 +232,11 @@ namespace Spending.Services
                 .Where(r => r.Date.Month == currentMonth && r.Date.Year == currentYear)
                 .Sum(r => r.Type == RecordType.Income ? r.Amount : -r.Amount);
         }
+        /**
+         * <summary>
+         * A method to get the current month's income asynchronously.
+         * </summary>
+         */
         public static async Task<decimal> GetCurrentMonthIncome()
         {
             var records = await GetRecordsAsync();
@@ -191,6 +246,11 @@ namespace Spending.Services
                 .Where(r => r.Date.Month == currentMonth && r.Date.Year == currentYear && r.Type == RecordType.Income)
                 .Sum(r => r.Amount);
         }
+        /**
+         * <summary>
+         * A method to get the current month's expenses asynchronously.
+         * </summary>
+         */
         public static async Task<decimal> GetCurrentMonthExpense()
         {
             var records = await GetRecordsAsync();
@@ -200,11 +260,21 @@ namespace Spending.Services
                 .Where(r => r.Date.Month == currentMonth && r.Date.Year == currentYear && r.Type == RecordType.Expense)
                 .Sum(r => r.Amount);
         }
+        /**
+         * <summary>
+         * A method to get the total balance of all records asynchronously.
+         * </summary>
+         */
         public static async Task<decimal> GetTotalBalance()
         {
             var records = await GetRecordsAsync();
             return records.Sum(r => r.Type == RecordType.Income ? r.Amount : -r.Amount);
         }
+        /**
+         * <summary>
+         * A class representing the result of an import operation.
+         * </summary>
+         */
         public class ImportResult
         {
             public string Name { get; set; }
@@ -222,6 +292,12 @@ namespace Spending.Services
             }
             return true;
         }
+        /**
+         * <summary>
+         * A method to import a database from a file asynchronously.
+         * </summary>
+         * <param name="filePath">The path to the database file.</param>
+         */
         public static Task ImportDatabase(string filePath)
         {
             using (var connection = new SqliteConnection($"Data Source={filePath}"))
@@ -294,6 +370,12 @@ namespace Spending.Services
 
             return Task.CompletedTask;
         }
+        /**
+         * <summary>
+         * A method to export the database to a specified file path asynchronously.
+         * </summary>
+         * <param name="filePath">The path to export the database to.</param>
+         */
         public static Task ExportDatabase(string filePath)
         {
             File.Copy("spending.db", filePath, true);

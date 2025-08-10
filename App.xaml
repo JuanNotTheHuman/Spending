@@ -1,10 +1,10 @@
-﻿<Application x:Class="Spending.App"
+﻿<Application x:Class="JuanNotTheHuman.Spending.App"
              xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
              xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
              StartupUri="Views/MainWindow.xaml"
-             xmlns:enumerables="clr-namespace:Spending.Enumerables"
+             xmlns:enumerables="clr-namespace:JuanNotTheHuman.Spending.Enumerables"
              xmlns:sys="clr-namespace:System;assembly=mscorlib"
-             xmlns:local="clr-namespace:Spending" xmlns:services="clr-namespace:Spending.Services">
+             xmlns:services="clr-namespace:JuanNotTheHuman.Spending.Services">
     <Application.Resources>
         <ObjectDataProvider x:Key="Localization" ObjectType="{x:Type services:LocalizationService}" MethodName="get_Instance"/>
     </Application.Resources>

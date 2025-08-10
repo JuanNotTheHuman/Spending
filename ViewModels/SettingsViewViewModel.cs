@@ -1,21 +1,36 @@
 ﻿using Microsoft.Win32;
-using Spending.Commands;
-using Spending.Helpers;
-using Spending.Services;
-using Spending.Views;
+using JuanNotTheHuman.Spending.Commands;
+using JuanNotTheHuman.Spending.Helpers;
+using JuanNotTheHuman.Spending.Services;
 using System;
 using System.Collections.ObjectModel;
 using System.Globalization;
 using System.Linq;
 using System.Windows;
 using System.Windows.Input;
+using JuanNotTheHuman.Spending.Views;
 
-namespace Spending.ViewModels
+namespace JuanNotTheHuman.Spending.ViewModels
 {
+    /**
+     * <summary>
+     * A view model for the settings view.
+     * </summary>
+     */
     internal class SettingsViewViewModel : ViewModelBase
     {
         private CurrencyInfo _selectedCurrency;
+        /**
+         * <summary>
+         * A collection of available currencies.
+         * </summary>
+         */
         public ObservableCollection<CurrencyInfo> Currencies { get; }
+        /**
+         * <summary>
+         * The currently selected currency.
+         * </summary>
+         */
         public CurrencyInfo SelectedCurrency
         {
             get => _selectedCurrency;
@@ -26,15 +41,25 @@ namespace Spending.ViewModels
                     _selectedCurrency = value;
                     OnPropertyChanged();
                     CultureInfo.CurrentCulture = new CultureInfo(value.CultureName);
-                    ApplicationCultureInfoHelper.Update(value.CultureName);
+                    CultureInfoHelper.Update(value.CultureName);
                     LocalizationService.Instance.Refresh();
                 }
             }
         }
+        /**
+         * <summary>
+         * Command to navigate back to the records view.
+         * </summary>
+         */
         public ICommand BackCommand => new RelayCommand(() =>
         {
             NavigationService.Navigate(new RecordsView());
         });
+        /**
+         * <summary>
+         * Command to import a database file.
+         * </summary>
+         */
         public ICommand ImportDatabaseCommand => new RelayCommand(() =>
         {
             var ofselect = new OpenFileDialog
@@ -55,6 +80,11 @@ namespace Spending.ViewModels
                 }
             }
         });
+        /**
+         * <summary>
+         * Command to export the current database.
+         * </summary>
+         */
         public ICommand ExportDatabaseCommand => new RelayCommand(() =>
         {
             var sfd = new SaveFileDialog

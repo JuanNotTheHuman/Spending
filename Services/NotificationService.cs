@@ -1,21 +1,32 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+﻿using System.Windows;
 
-namespace Spending.Services
+namespace JuanNotTheHuman.Spending.Services
 {
-    public static class NotificationService
+    /**
+     * <summary>
+     * A service for displaying notifications.
+     * </summary>
+     */
+    internal static class NotificationService
     {
+        /**
+         * <summary>
+         * A method to show a notification with a title and message.
+         * </summary>
+         */
         public static void ShowNotification(string title, string message)
         {
-            System.Windows.MessageBox.Show(message, title, System.Windows.MessageBoxButton.OK, System.Windows.MessageBoxImage.Information);
+            MessageBox.Show(message, title, MessageBoxButton.OK, MessageBoxImage.Information);
         }
+        /**
+         * <summary>
+         * A method to show a confirmation dialog with a title and message.
+         * </summary>
+         */
         public static bool AskConfirmation(string title, string message)
         {
-            var result = System.Windows.MessageBox.Show(message, title, System.Windows.MessageBoxButton.YesNo, System.Windows.MessageBoxImage.Question);
-            return result == System.Windows.MessageBoxResult.Yes;
+            var result = MessageBox.Show(message, title, MessageBoxButton.YesNo, MessageBoxImage.Question);
+            return result == MessageBoxResult.Yes;
         }
     }
 }

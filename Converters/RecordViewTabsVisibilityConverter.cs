@@ -1,16 +1,22 @@
-﻿using Spending.Enumerables;
+﻿using JuanNotTheHuman.Spending.Enumerables;
 using System;
-using System.Collections.Generic;
 using System.Globalization;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using System.Windows.Data;
 
-namespace Spending.Converters
+namespace JuanNotTheHuman.Spending.Converters
 {
+    /**
+     * <summary>
+     * Converts a RecordViewTabs enum value to a visibility value based on the selected tab.
+     * </summary>
+     */
     internal class RecordViewTabsVisibilityConverter : IValueConverter
     {
+        /**
+         * <summary>
+         * Converts a RecordViewTabs enum value to a visibility value.
+         * </summary>
+         */
         public object Convert(object value, Type targetType, object parameter, CultureInfo culture)
         {
             if (value is RecordViewTabs selectedTab && parameter is string tabName && Enum.TryParse(tabName, out RecordViewTabs thisTab))
@@ -19,10 +25,18 @@ namespace Spending.Converters
             }
             return System.Windows.Visibility.Collapsed;
         }
-
+        /**
+         * <summary>
+         * Converts a visibility value back to a RecordViewTabs enum value.
+         * </summary>
+         */
         public object ConvertBack(object value, Type targetType, object parameter, CultureInfo culture)
         {
-            throw new NotImplementedException();
+            if (value is System.Windows.Visibility visibility && parameter is string tabName && Enum.TryParse(tabName, out RecordViewTabs thisTab))
+            {
+                return visibility == System.Windows.Visibility.Visible ? thisTab : Binding.DoNothing;
+            }
+            return Binding.DoNothing;
         }
     }
 }

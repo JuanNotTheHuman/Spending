@@ -1,14 +1,13 @@
-﻿using System;
-using System.Collections.Generic;
-using System.ComponentModel.DataAnnotations;
-using System.Linq;
-using System.Security.AccessControl;
-using System.Text;
-using System.Threading.Tasks;
+﻿using System.ComponentModel.DataAnnotations;
 
-namespace Spending.Enumerables
+namespace JuanNotTheHuman.Spending.Enumerables
 {
-    public enum Category
+    /**
+     * <summary>
+     * An Enumeration representing various categories of spending.
+     * </summary>
+     */
+    internal enum Category
     {
         [Display(ResourceType = typeof(Resources.Resources), Name = "CategoryFood")]
         Food,

@@ -5,9 +5,14 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace Spending.Enumerables
+namespace JuanNotTheHuman.Spending.Enumerables
 {
-    public enum RecordType
+    /**
+     * <summary>
+     * An Enumeration representing the type of financial record.
+     * </summary>
+     */
+    internal enum RecordType
     {
         [Display(ResourceType = typeof(Resources.Resources), Name = "TypeIncome")]
         Income,

@@ -1,16 +1,22 @@
-﻿using Spending.Enumerables;
+﻿using JuanNotTheHuman.Spending.Enumerables;
 using System;
-using System.Collections.Generic;
 using System.Globalization;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using System.Windows.Data;
 
-namespace Spending.Converters
+namespace JuanNotTheHuman.Spending.Converters
 {
+    /**
+     * <summary>
+     * Converts a RecordType to an icon representation.
+     * </summary>
+     */
     internal class RecordTypeIconConverter : IValueConverter
     {
+        /**
+         * <summary>
+         * Converts a RecordType to an icon string.
+         * </summary>
+         */
         public object Convert(object value, Type targetType, object parameter, CultureInfo culture)
         {
             if (value is RecordType recordType)
@@ -26,10 +32,24 @@ namespace Spending.Converters
             }
             return "?";
         }
-
+        /**
+         * <summary>
+         * Converts an icon string back to a RecordType.
+         * </summary>
+         */
         public object ConvertBack(object value, Type targetType, object parameter, CultureInfo culture)
         {
-            throw new NotImplementedException();
+            if(value is string icon)
+            {
+                switch (icon)
+                {
+                    case "🔺":
+                        return RecordType.Income;
+                    case "🔻":
+                        return RecordType.Expense;
+                }
+            }
+            return RecordType.Expense;
         }
     }
 }

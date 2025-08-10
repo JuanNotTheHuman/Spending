@@ -1,17 +1,13 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+﻿using System.Collections.Generic;
 
-namespace Spending.Helpers
+namespace JuanNotTheHuman.Spending.Helpers
 {
-    using System;
-    using System.Collections.Generic;
-    using System.Globalization;
-    using System.Linq;
-
-    public class CurrencyInfo
+    /**
+     * <summary>
+     * Information about a currency, including its name, symbol, ISO code, country, and culture name.
+     * </summary>
+     */
+    internal class CurrencyInfo
     {
         public string CurrencyName { get; set; }
         public string CurrencySymbol { get; set; }
@@ -19,7 +15,12 @@ namespace Spending.Helpers
         public string Country { get; set; }
         public string CultureName { get; set; }
     }
-    public static class CurrencyHelper
+    /**
+     * <summary>
+     * A helper class to provide a list of common currencies with their details.
+     * </summary>
+     */
+    internal static class CurrencyHelper
     {
         public static List<CurrencyInfo> GetAllCurrencies()
         {
