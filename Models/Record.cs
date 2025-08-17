@@ -1,5 +1,5 @@
-﻿using System;
-using JuanNotTheHuman.Spending.Enumerables;
+﻿using JuanNotTheHuman.Spending.Enumerables;
+using System;
 namespace JuanNotTheHuman.Spending.Models
 {
     /**

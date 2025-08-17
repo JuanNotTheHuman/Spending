@@ -133,7 +133,7 @@
     <value>{0} dochodowych operacji</value>
   </data>
   <data name="ThisMonthNet" xml:space="preserve">
-    <value>Obence saldo:</value>
+    <value>Obecne saldo:</value>
   </data>
   <data name="TotalTransactions" xml:space="preserve">
     <value>{0} operacji ogółem</value>
@@ -144,55 +144,55 @@
   <data name="TransactionsOverview" xml:space="preserve">
     <value>Przegląd</value>
   </data>
-  <data name="CategoryFood" xml:space="preserve">
+  <data name="Food" xml:space="preserve">
     <value>Jedzenie</value>
   </data>
-  <data name="CategoryTransport" xml:space="preserve">
+  <data name="Transport" xml:space="preserve">
     <value>Transport</value>
   </data>
-  <data name="CategoryEntertainment" xml:space="preserve">
+  <data name="Entertainment" xml:space="preserve">
     <value>Przyjemności</value>
   </data>
-  <data name="CategoryHealth" xml:space="preserve">
+  <data name="Health" xml:space="preserve">
     <value>Zdrowie</value>
   </data>
-  <data name="CategoryEducation" xml:space="preserve">
+  <data name="Education" xml:space="preserve">
     <value>Edukacja</value>
   </data>
-  <data name="CategoryShopping" xml:space="preserve">
+  <data name="Shopping" xml:space="preserve">
     <value>Zakupy</value>
   </data>
-  <data name="CategoryUtilities" xml:space="preserve">
+  <data name="Utilities" xml:space="preserve">
     <value>Media</value>
   </data>
-  <data name="CategoryOther" xml:space="preserve">
+  <data name="Other" xml:space="preserve">
     <value>Inne</value>
   </data>
-  <data name="CategoryIncome" xml:space="preserve">
+  <data name="Income" xml:space="preserve">
     <value>Dochód</value>
   </data>
-  <data name="CategoryPets" xml:space="preserve">
+  <data name="Pets" xml:space="preserve">
     <value>Zwierzęta</value>
   </data>
-  <data name="CategoryVet" xml:space="preserve">
+  <data name="Vet" xml:space="preserve">
     <value>Weterynarz</value>
   </data>
-  <data name="CategoryGifts" xml:space="preserve">
+  <data name="Gifts" xml:space="preserve">
     <value>Prezenty</value>
   </data>
-  <data name="CategoryTravel" xml:space="preserve">
+  <data name="Travel" xml:space="preserve">
     <value>Podróże</value>
   </data>
-  <data name="CategoryHome" xml:space="preserve">
+  <data name="Home" xml:space="preserve">
     <value>Dom</value>
   </data>
-  <data name="CategorySubscriptions" xml:space="preserve">
+  <data name="Subscriptions" xml:space="preserve">
     <value>Subskrypcje</value>
   </data>
   <data name="TotalBalance" xml:space="preserve">
     <value>Ogólne saldo:</value>
   </data>
-  <data name="CategoryPhone" xml:space="preserve">
+  <data name="Phone" xml:space="preserve">
     <value>Telefon</value>
   </data>
   <data name="TypeIncome" xml:space="preserve">
@@ -210,13 +210,13 @@
   <data name="RecordViewTab_EditRecord" xml:space="preserve">
     <value>Edytuj operacje</value>
   </data>
-  <data name="SelectableFilterCategory_Incomes" xml:space="preserve">
+  <data name="Incomes" xml:space="preserve">
     <value>Dochody</value>
   </data>
-  <data name="SelectableFilterCategory_Expenses" xml:space="preserve">
+  <data name="Expenses" xml:space="preserve">
     <value>Wydatki</value>
   </data>
-  <data name="SelectableFilterCategory_All" xml:space="preserve">
+  <data name="All" xml:space="preserve">
     <value>Wszystkie</value>
   </data>
   <data name="SettingsCurrencyInfo" xml:space="preserve">
@@ -242,5 +242,35 @@
   </data>
   <data name="ExportDatabaseButton" xml:space="preserve">
     <value>Eksportuj</value>
+  </data>
+  <data name="AddNewRecord" xml:space="preserve">
+    <value>Dodaj nową operację</value>
+  </data>
+  <data name="Type" xml:space="preserve">
+    <value>Typ:</value>
+  </data>
+  <data name="Expense" xml:space="preserve">
+    <value>Wydatek</value>
+  </data>
+  <data name="Amount" xml:space="preserve">
+    <value>Wartość:</value>
+  </data>
+  <data name="Date" xml:space="preserve">
+    <value>Data:</value>
+  </data>
+  <data name="Category" xml:space="preserve">
+    <value>Kategoria:</value>
+  </data>
+  <data name="Name" xml:space="preserve">
+    <value>Tytuł:</value>
+  </data>
+  <data name="EditRecord" xml:space="preserve">
+    <value>Edytuj operację</value>
+  </data>
+  <data name="ClearDatabaseText" xml:space="preserve">
+    <value>Wyczyść bazę danych:</value>
+  </data>
+  <data name="ClearDatabaseButton" xml:space="preserve">
+    <value>Wyczyść</value>
   </data>
 </root>

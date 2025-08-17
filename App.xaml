@@ -4,8 +4,139 @@
              StartupUri="Views/MainWindow.xaml"
              xmlns:enumerables="clr-namespace:JuanNotTheHuman.Spending.Enumerables"
              xmlns:sys="clr-namespace:System;assembly=mscorlib"
-             xmlns:services="clr-namespace:JuanNotTheHuman.Spending.Services">
+             xmlns:services="clr-namespace:JuanNotTheHuman.Spending.Services" xmlns:converters="clr-namespace:JuanNotTheHuman.Spending.Converters">
     <Application.Resources>
         <ObjectDataProvider x:Key="Localization" ObjectType="{x:Type services:LocalizationService}" MethodName="get_Instance"/>
+        <Style TargetType="ComboBox">
+            <Setter Property="SnapsToDevicePixels" Value="True"/>
+            <Setter Property="OverridesDefaultStyle" Value="True"/>
+            <Setter Property="ScrollViewer.HorizontalScrollBarVisibility" Value="Auto"/>
+            <Setter Property="ScrollViewer.VerticalScrollBarVisibility" Value="Auto"/>
+            <Setter Property="Padding" Value="4"/>
+            <Setter Property="Background" Value="LightGray"/>
+            <Setter Property="BorderBrush" Value="Gray"/>
+            <Setter Property="BorderThickness" Value="1"/>
+            <Setter Property="Template">
+                <Setter.Value>
+                    <ControlTemplate TargetType="ComboBox">
+                        <Grid>
+                            <Border 
+                        Name="Border" Grid.Column="1"
+                        Background="{TemplateBinding Background}" 
+                        BorderBrush="{TemplateBinding BorderBrush}" 
+                        BorderThickness="{TemplateBinding BorderThickness}" 
+                        CornerRadius="10"
+                        SnapsToDevicePixels="True">
+                                <Grid>
+                                    <Grid.ColumnDefinitions>
+                                        <ColumnDefinition Width="20" />
+                                        <ColumnDefinition Width="*" />
+                                    </Grid.ColumnDefinitions>
+                                    <ContentPresenter 
+                                Name="ContentSite"
+                                Content="{TemplateBinding SelectionBoxItem}"
+                                ContentTemplate="{TemplateBinding SelectionBoxItemTemplate}"
+                                ContentTemplateSelector="{TemplateBinding ItemTemplateSelector}"
+                                VerticalAlignment="Center"
+                                HorizontalAlignment="Left"
+                                Margin="6,0,0,0" Grid.Column="1"/>
+                                    <ToggleButton 
+                                Grid.Column="0"
+                                Focusable="False"
+                                Background="Transparent"
+                                BorderBrush="Transparent"
+                                BorderThickness="0"
+                                IsChecked="{Binding IsDropDownOpen, Mode=TwoWay, RelativeSource={RelativeSource TemplatedParent}}"
+                                ClickMode="Press">
+                                        <ToggleButton.Template>
+                                            <ControlTemplate TargetType="ToggleButton">
+                                                <Border Background="Transparent" Padding="4">
+                                                    <Path 
+                                                HorizontalAlignment="Center" 
+                                                VerticalAlignment="Center" 
+                                                Fill="Black" 
+                                                Data="M 0 0 L 4 4 L 8 0 Z"/>
+                                                </Border>
+                                            </ControlTemplate>
+                                        </ToggleButton.Template>
+                                    </ToggleButton>
+                                </Grid>
+                            </Border>
+                            <Popup 
+                        Name="Popup" 
+                        Placement="Bottom" 
+                        IsOpen="{TemplateBinding IsDropDownOpen}" 
+                        AllowsTransparency="True" 
+                        Focusable="False" 
+                        PopupAnimation="Slide">
+                                <Grid 
+                            Name="DropDown" 
+                            SnapsToDevicePixels="True"
+                            MinWidth="{TemplateBinding ActualWidth}"
+                            MaxHeight="{TemplateBinding MaxDropDownHeight}">
+                                    <Border 
+                                Background="White" 
+                                BorderBrush="{TemplateBinding BorderBrush}" 
+                                BorderThickness="1" 
+                                CornerRadius="0" />
+                                    <ScrollViewer Margin="4" SnapsToDevicePixels="True">
+                                        <StackPanel IsItemsHost="True" KeyboardNavigation.DirectionalNavigation="Contained"/>
+                                    </ScrollViewer>
+                                </Grid>
+                            </Popup>
+                        </Grid>
+                        <ControlTemplate.Triggers>
+                            <Trigger Property="IsEnabled" Value="False">
+                                <Setter Property="Foreground" Value="Gray"/>
+                            </Trigger>
+                            <Trigger Property="IsFocused" Value="True">
+                                <Setter TargetName="Border" Property="BorderBrush" Value="Black"/>
+                            </Trigger>
+                        </ControlTemplate.Triggers>
+                    </ControlTemplate>
+                </Setter.Value>
+            </Setter>
+        </Style>
+        <Style TargetType="Button">
+            <Setter Property="Background" Value="LightGray"/>
+            <Setter Property="Padding" Value="3"/>
+            <Setter Property="Template">
+                <Setter.Value>
+                    <ControlTemplate TargetType="{x:Type Button}">
+                        <Border BorderThickness="1" BorderBrush="Gray" Background="{TemplateBinding Background}" CornerRadius="5">
+                            <ContentPresenter HorizontalAlignment="Center" VerticalAlignment="Center"/>
+                        </Border>
+                    </ControlTemplate>
+                </Setter.Value>
+            </Setter>
+        </Style>
+        <Style TargetType="TextBox">
+            <Setter Property="Background" Value="LightGray"/>
+            <Setter Property="BorderThickness" Value="0"/>
+        </Style>
+        <Style TargetType="DatePicker">
+            <Setter Property="Background" Value="LightGray"/>
+            <Setter Property="BorderThickness" Value="0"/>
+        </Style>
+        <converters:CalendarConverter x:Key="CalendarConverter"/>
+        <converters:CurrencyConverter x:Key="CurrencyConverter"/>
+        <converters:RecordTypeColorConverter x:Key="RecordTypeColorConverter"/>
+        <converters:RecordTypeIconConverter x:Key="RecordTypeIconConverter"/>
+        <converters:NewRecordSelectedTypeConverter x:Key="NewRecordSelectedTypeConverter"/>
+        <converters:RecordViewTabsVisibilityConverter x:Key="RecordViewTabsVisibilityConverter"/>
+        <converters:BoolToVisibilityConverter x:Key="BoolToVisibilityConverter"/>
+        <converters:NetToColorConverter x:Key="NetToColorConverter"/>
+        <converters:RecordViewTabsConverter x:Key="RecordViewTabsConverter"/>
+        <converters:EnumToLocalizedConverter x:Key="EnumToLocalizedConverter"/>
+        <ObjectDataProvider x:Key="SelectableFilterCategories" MethodName="GetValues" ObjectType="{x:Type sys:Enum}">
+            <ObjectDataProvider.MethodParameters>
+                <x:Type TypeName="enumerables:SelectableFilterCategories"/>
+            </ObjectDataProvider.MethodParameters>
+        </ObjectDataProvider>
+        <ObjectDataProvider x:Key="NewRecordCategories" MethodName="GetValues" ObjectType="{x:Type sys:Enum}">
+            <ObjectDataProvider.MethodParameters>
+                <x:Type TypeName="enumerables:Category"/>
+            </ObjectDataProvider.MethodParameters>
+        </ObjectDataProvider>
     </Application.Resources>
 </Application>

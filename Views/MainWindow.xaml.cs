@@ -1,5 +1,4 @@
 ﻿using JuanNotTheHuman.Spending.Services;
-using JuanNotTheHuman.Spending.Views;
 using System.Windows;
 
 namespace JuanNotTheHuman.Spending.Views

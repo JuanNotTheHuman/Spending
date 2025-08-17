@@ -1,6 +1,6 @@
-﻿using Microsoft.Data.Sqlite;
-using JuanNotTheHuman.Spending.Enumerables;
+﻿using JuanNotTheHuman.Spending.Enumerables;
 using JuanNotTheHuman.Spending.Models;
+using Microsoft.Data.Sqlite;
 using System;
 using System.Collections.Generic;
 using System.IO;
@@ -284,7 +284,7 @@ namespace JuanNotTheHuman.Spending.Services
         {
             foreach (var item in expected)
             {
-                if (!actual.Any(a => a.Item1.Equals(item.Item1, StringComparison.OrdinalIgnoreCase) && 
+                if (!actual.Any(a => a.Item1.Equals(item.Item1, StringComparison.OrdinalIgnoreCase) &&
                                      a.Item2.Equals(item.Item2, StringComparison.OrdinalIgnoreCase)))
                 {
                     return false;
@@ -324,18 +324,18 @@ namespace JuanNotTheHuman.Spending.Services
                 var results = new List<ImportResult>();
                 foreach (string tableName in tables)
                 {
-                    using(var GetSchemaCommand = connection.CreateCommand())
+                    using (var GetSchemaCommand = connection.CreateCommand())
                     {
                         GetSchemaCommand.CommandText = $"PRAGMA table_info({tableName})";
-                        using(var schemaReader = GetSchemaCommand.ExecuteReader())
+                        using (var schemaReader = GetSchemaCommand.ExecuteReader())
                         {
-                            var columns = new List<(string,string)>();
+                            var columns = new List<(string, string)>();
                             while (schemaReader.Read())
                             {
-                                columns.Add((schemaReader.GetString(1),schemaReader.GetString(2)));
+                                columns.Add((schemaReader.GetString(1), schemaReader.GetString(2)));
                             }
                             columns = columns.OrderBy(x => x.Item1).ToList();
-                            if(SchemasMatch(Schema, columns))
+                            if (SchemasMatch(Schema, columns))
                             {
                                 results.Add(new ImportResult
                                 {
@@ -365,9 +365,35 @@ namespace JuanNotTheHuman.Spending.Services
                     message.AppendLine($"{result.Name}: {(result.Matches ? "Matches" : "Does not match")}");
                 }
                 message.AppendLine("\nDo you want to import the data?");
-                MessageBox.Show(message.ToString(), "Import Results", MessageBoxButton.YesNo, MessageBoxImage.Question);
+                bool res = NotificationService.AskConfirmation("Import Results", message.ToString());
+                if (res)
+                {
+                    var ImportTables = results.Where(r => r.Matches).Select(r => r.Name).ToList();
+                    foreach (string importTableName in ImportTables)
+                    {
+                        using (var importCommand = connection.CreateCommand())
+                        {
+                            importCommand.CommandText = $"SELECT (Name,Amount,Date,Category,Type) FROM {importTableName}";
+                            using (var reader = importCommand.ExecuteReader())
+                            {
+                                while (reader.Read())
+                                {
+                                    var record = new Record
+                                    {
+                                        Name = reader.GetString(0),
+                                        Amount = reader.GetDecimal(1),
+                                        Date = DateTime.Parse(reader.GetString(2)),
+                                        Category = (Category)reader.GetInt32(3),
+                                        Type = (RecordType)reader.GetInt32(4)
+                                    };
+                                    AddRecordAsync(record).Wait();
+                                }
+                            }
+                        }
+                    }
+                    NotificationService.ShowNotification("Import Successful", "The database has been successfully imported.");
+                }
             }
-
             return Task.CompletedTask;
         }
         /**
@@ -379,6 +405,18 @@ namespace JuanNotTheHuman.Spending.Services
         public static Task ExportDatabase(string filePath)
         {
             File.Copy("spending.db", filePath, true);
+            return Task.CompletedTask;
+        }
+        public static Task Clear()
+        {
+            using (var connection = new SqliteConnection("Data Source=spending.db"))
+            {
+                connection.Open();
+                var command = connection.CreateCommand();
+                command.CommandText = "DELETE FROM Records";
+                command.ExecuteNonQuery();
+            }
+            NotificationService.ShowNotification("Database Cleared", "All records have been cleared from the database.");
             return Task.CompletedTask;
         }
     }

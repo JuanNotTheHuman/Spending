@@ -12,8 +12,10 @@ namespace Spending
     {
         protected override void OnStartup(StartupEventArgs e)
         {
+            CultureInfo.CurrentCulture = new CultureInfo(CultureInfoHelper.Get());
             CultureInfo.DefaultThreadCurrentCulture = new CultureInfo(CultureInfoHelper.Get());
             CultureInfo.DefaultThreadCurrentUICulture = new CultureInfo(CultureInfoHelper.Get());
+            CultureInfoHelper.Update(CultureInfoHelper.Get());
             LocalizationService.Instance.Refresh();
             base.OnStartup(e);
         }

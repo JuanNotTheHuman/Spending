@@ -1,7 +1,6 @@
 ﻿using JuanNotTheHuman.Spending.Enumerables;
 using JuanNotTheHuman.Spending.Models;
 using System;
-using System.Windows.Input;
 
 namespace JuanNotTheHuman.Spending.ViewModels
 {
@@ -119,7 +118,7 @@ namespace JuanNotTheHuman.Spending.ViewModels
          */
         public Record GetRecord()
         {
-            return new Record(_id,_name, _amount, _date, _category,_type);
+            return new Record(_id, _name, _amount, _date, _category, _type);
         }
         /**
          * <summary>

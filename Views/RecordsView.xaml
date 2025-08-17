@@ -5,145 +5,13 @@
       xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
       xmlns:sys="clr-namespace:System;assembly=mscorlib"
       xmlns:enumerables="clr-namespace:JuanNotTheHuman.Spending.Enumerables"
-      xmlns:local="clr-namespace:Spending.Views" xmlns:viewmodels="clr-namespace:JuanNotTheHuman.Spending.ViewModels" xmlns:converters="clr-namespace:JuanNotTheHuman.Spending.Converters"
+      xmlns:local="clr-namespace:JuanNotTheHuman.Spending.Views" xmlns:viewmodels="clr-namespace:JuanNotTheHuman.Spending.ViewModels" xmlns:converters="clr-namespace:JuanNotTheHuman.Spending.Converters"
       mc:Ignorable="d"
       d:DesignHeight="450" d:DesignWidth="800"
       Title="RecordsView">
     <Page.DataContext>
         <viewmodels:RecordsViewViewModel/>
     </Page.DataContext>
-    <Page.Resources>
-        <Style TargetType="ComboBox">
-            <Setter Property="SnapsToDevicePixels" Value="True"/>
-            <Setter Property="OverridesDefaultStyle" Value="True"/>
-            <Setter Property="ScrollViewer.HorizontalScrollBarVisibility" Value="Auto"/>
-            <Setter Property="ScrollViewer.VerticalScrollBarVisibility" Value="Auto"/>
-            <Setter Property="Padding" Value="4"/>
-            <Setter Property="Background" Value="LightGray"/>
-            <Setter Property="BorderBrush" Value="Gray"/>
-            <Setter Property="BorderThickness" Value="1"/>
-            <Setter Property="Template">
-                <Setter.Value>
-                    <ControlTemplate TargetType="ComboBox">
-                        <Grid>
-                            <Border 
-                        Name="Border"
-                        Background="{TemplateBinding Background}" 
-                        BorderBrush="{TemplateBinding BorderBrush}" 
-                        BorderThickness="{TemplateBinding BorderThickness}" 
-                        CornerRadius="10"
-                        SnapsToDevicePixels="True">
-                                <Grid>
-                                    <Grid.ColumnDefinitions>
-                                        <ColumnDefinition Width="*" />
-                                        <ColumnDefinition Width="30" />
-                                    </Grid.ColumnDefinitions>
-                                    <ContentPresenter 
-                                Name="ContentSite"
-                                Content="{TemplateBinding SelectionBoxItem}"
-                                ContentTemplate="{TemplateBinding SelectionBoxItemTemplate}"
-                                ContentTemplateSelector="{TemplateBinding ItemTemplateSelector}"
-                                VerticalAlignment="Center"
-                                HorizontalAlignment="Left"
-                                Margin="6,0,0,0"/>
-                                    <ToggleButton 
-                                Grid.Column="1"
-                                Focusable="False"
-                                Background="Transparent"
-                                BorderBrush="Transparent"
-                                BorderThickness="0"
-                                IsChecked="{Binding IsDropDownOpen, Mode=TwoWay, RelativeSource={RelativeSource TemplatedParent}}"
-                                ClickMode="Press">
-                                        <ToggleButton.Template>
-                                            <ControlTemplate TargetType="ToggleButton">
-                                                <Border Background="Transparent" Padding="4">
-                                                    <Path 
-                                                HorizontalAlignment="Center" 
-                                                VerticalAlignment="Center" 
-                                                Fill="Black" 
-                                                Data="M 0 0 L 4 4 L 8 0 Z"/>
-                                                </Border>
-                                            </ControlTemplate>
-                                        </ToggleButton.Template>
-                                    </ToggleButton>
-                                </Grid>
-                            </Border>
-                            <Popup 
-                        Name="Popup" 
-                        Placement="Bottom" 
-                        IsOpen="{TemplateBinding IsDropDownOpen}" 
-                        AllowsTransparency="True" 
-                        Focusable="False" 
-                        PopupAnimation="Slide">
-                                <Grid 
-                            Name="DropDown" 
-                            SnapsToDevicePixels="True"
-                            MinWidth="{TemplateBinding ActualWidth}"
-                            MaxHeight="{TemplateBinding MaxDropDownHeight}">
-                                    <Border 
-                                Background="White" 
-                                BorderBrush="{TemplateBinding BorderBrush}" 
-                                BorderThickness="1" 
-                                CornerRadius="0" />
-                                    <ScrollViewer Margin="4" SnapsToDevicePixels="True">
-                                        <StackPanel IsItemsHost="True" KeyboardNavigation.DirectionalNavigation="Contained"/>
-                                    </ScrollViewer>
-                                </Grid>
-                            </Popup>
-                        </Grid>
-                        <ControlTemplate.Triggers>
-                            <Trigger Property="IsEnabled" Value="False">
-                                <Setter Property="Foreground" Value="Gray"/>
-                            </Trigger>
-                            <Trigger Property="IsFocused" Value="True">
-                                <Setter TargetName="Border" Property="BorderBrush" Value="Black"/>
-                            </Trigger>
-                        </ControlTemplate.Triggers>
-                    </ControlTemplate>
-                </Setter.Value>
-            </Setter>
-        </Style>
-        <Style TargetType="Button">
-            <Setter Property="Background" Value="LightGray"/>
-            <Setter Property="Padding" Value="3"/>
-            <Setter Property="Template">
-                <Setter.Value>
-                    <ControlTemplate TargetType="{x:Type Button}">
-                        <Border BorderThickness="1" BorderBrush="Gray" Background="{TemplateBinding Background}" CornerRadius="5">
-                            <ContentPresenter HorizontalAlignment="Center" VerticalAlignment="Center"/>
-                        </Border>
-                    </ControlTemplate>
-                </Setter.Value>
-            </Setter>
-        </Style>
-        <Style TargetType="TextBox">
-            <Setter Property="Background" Value="LightGray"/>
-            <Setter Property="BorderThickness" Value="0"/>
-        </Style>
-        <Style TargetType="DatePicker">
-            <Setter Property="Background" Value="LightGray"/>
-            <Setter Property="BorderThickness" Value="0"/>
-        </Style>
-        <converters:CalendarConverter x:Key="CalendarConverter"/>
-        <converters:CurrencyConverter x:Key="CurrencyConverter"/>
-        <converters:RecordTypeColorConverter x:Key="RecordTypeColorConverter"/>
-        <converters:RecordTypeIconConverter x:Key="RecordTypeIconConverter"/>
-        <converters:NewRecordSelectedTypeConverter x:Key="NewRecordSelectedTypeConverter"/>
-        <converters:RecordViewTabsVisibilityConverter x:Key="RecordViewTabsVisibilityConverter"/>
-        <converters:BoolToVisibilityConverter x:Key="BoolToVisibilityConverter"/>
-        <converters:NetToColorConverter x:Key="NetToColorConverter"/>
-        <converters:RecordViewTabsConverter x:Key="RecordViewTabsConverter"/>
-        <ObjectDataProvider x:Key="SelectableFilterCategories" MethodName="GetValues" ObjectType="{x:Type sys:Enum}">
-            <ObjectDataProvider.MethodParameters>
-                <x:Type TypeName="enumerables:SelectableFilterCategories"/>
-            </ObjectDataProvider.MethodParameters>
-        </ObjectDataProvider>
-        <ObjectDataProvider x:Key="NewRecordCategories" MethodName="GetValues" ObjectType="{x:Type sys:Enum}">
-            <ObjectDataProvider.MethodParameters>
-                <x:Type TypeName="enumerables:Category"/>
-            </ObjectDataProvider.MethodParameters>
-        </ObjectDataProvider>
-    </Page.Resources>
     <ScrollViewer>
             <StackPanel>
             <Button Content="⚙️" Command="{Binding NavigateToSettingsCommand}" Margin="0" HorizontalAlignment="Right" Padding="3"/>
@@ -216,7 +84,13 @@
             <Border Background="White" BorderBrush="#DDD" BorderThickness="1" CornerRadius="10" Padding="10" Margin="30,0,30,10" Visibility="{Binding SelectedTab,Converter={StaticResource RecordViewTabsVisibilityConverter},ConverterParameter=Overview}">
                     <DockPanel Margin="16">
                     <StackPanel DockPanel.Dock="Top" Orientation="Horizontal" HorizontalAlignment="Right" Margin="0,0,0,12">
-                        <ComboBox ItemsSource="{Binding Source={StaticResource SelectableFilterCategories}}" SelectedItem="{Binding SelectedCategory}" Width="180"/>
+                        <ComboBox ItemsSource="{Binding Source={StaticResource SelectableFilterCategories}}" SelectedItem="{Binding SelectedCategory}" Width="180">
+                            <ComboBox.ItemTemplate>
+                                <DataTemplate>
+                                    <TextBlock Text="{Binding Converter={StaticResource EnumToLocalizedConverter}}" Margin="5"/>
+                                </DataTemplate>
+                            </ComboBox.ItemTemplate>
+                        </ComboBox>
                         </StackPanel>
                         <StackPanel>
                         <TextBlock Text="{Binding Path=[NoTransactionsMessage],Source={StaticResource Localization}}" TextAlignment="Center"
@@ -265,7 +139,7 @@
                                                                                     <TextBlock Text="{Binding Type,Converter={StaticResource RecordTypeIconConverter}}" FontSize="14" Foreground="{Binding Type,Converter={StaticResource RecordTypeColorConverter}}"/>
                                                                                     <TextBlock Text="{Binding Amount,Converter={StaticResource CurrencyConverter}}" FontWeight="Bold" Foreground="{Binding Type,Converter={StaticResource RecordTypeColorConverter}}" Margin="10,0,10,0"/>
                                                                                     <Border BorderBrush="Gray" BorderThickness="1" Margin="10,0,0,0" CornerRadius="5" Background="LightGray">
-                                                                                        <TextBlock Text="{Binding Category}" FontSize="11" Background="Transparent" Padding="4,1"/>
+                                                                                        <TextBlock Text="{Binding Category,Converter={StaticResource EnumToLocalizedConverter}}" FontSize="11" Background="Transparent" Padding="4,1"/>
                                                                                     </Border>
                                                                                 </StackPanel>
                                                                                 <TextBlock Text="{Binding Name}" FontSize="12" Foreground="Gray"/>
@@ -296,16 +170,16 @@
                 </Border>
             <Border Background="White" BorderBrush="#DDD" BorderThickness="1" CornerRadius="10" Margin="30,0,30,10" Visibility="{Binding SelectedTab,Converter={StaticResource RecordViewTabsVisibilityConverter},ConverterParameter=AddRecord}" Padding="10">
                 <StackPanel>
-                    <TextBlock Text="Add New Record"/>
+                    <TextBlock Text="{Binding Path=[AddNewRecord],Source={StaticResource Localization}}"/>
                     <DockPanel>
-                        <TextBlock Text="Type:" FontWeight="SemiBold" VerticalAlignment="Center" Margin="0,0,10,0" DockPanel.Dock="Top"/>
+                        <TextBlock Text="{Binding Path=[Type],Source={StaticResource Localization}}" FontWeight="SemiBold" VerticalAlignment="Center" Margin="0,0,10,0" DockPanel.Dock="Top"/>
                         <Grid DockPanel.Dock="Bottom">
                             <Grid.ColumnDefinitions>
                                 <ColumnDefinition Width="Auto"/>
                                 <ColumnDefinition Width="Auto"/>
                             </Grid.ColumnDefinitions>
-                            <RadioButton GroupName="RecordType" Content="Expense" IsChecked="{Binding NewRecord.Type,Converter={StaticResource NewRecordSelectedTypeConverter},ConverterParameter=Expense}" Margin="0,0,10,0"/>
-                            <RadioButton GroupName="RecordType" Content="Income" IsChecked="{Binding NewRecord.Type,Converter={StaticResource NewRecordSelectedTypeConverter},ConverterParameter=Income}" Margin="0,0,10,0" Grid.Column="1"/>
+                            <RadioButton GroupName="RecordType" Content="{Binding Path=[Expense],Source={StaticResource Localization}}" IsChecked="{Binding NewRecord.Type,Converter={StaticResource NewRecordSelectedTypeConverter},ConverterParameter=Expense}" Margin="0,0,10,0"/>
+                            <RadioButton GroupName="RecordType" Content="{Binding Path=[Income],Source={StaticResource Localization}}" IsChecked="{Binding NewRecord.Type,Converter={StaticResource NewRecordSelectedTypeConverter},ConverterParameter=Income}" Margin="0,0,10,0" Grid.Column="1"/>
                         </Grid>
                     </DockPanel>
                     <Grid>
@@ -314,38 +188,44 @@
                             <ColumnDefinition Width="*"/>
                         </Grid.ColumnDefinitions>
                         <DockPanel Margin="5">
-                            <TextBlock Text="Amount" DockPanel.Dock="Top"/>
+                            <TextBlock Text="{Binding Path=[Amount],Source={StaticResource Localization}}" DockPanel.Dock="Top"/>
                             <TextBox Text="{Binding NewRecord.Amount,UpdateSourceTrigger=LostFocus}" DockPanel.Dock="Bottom"/>
                         </DockPanel>
                         <DockPanel Grid.Column="1" Margin="5">
-                            <TextBlock Text="Date" DockPanel.Dock="Top"/>
-                            <DatePicker SelectedDate="{Binding NewRecord.Date,UpdateSourceTrigger=LostFocus}" DockPanel.Dock="Bottom"/>
+                            <TextBlock Text="{Binding Path=[Date],Source={StaticResource Localization}}" DockPanel.Dock="Top"/>
+                            <DatePicker SelectedDate="{Binding NewRecord.Date,UpdateSourceTrigger=LostFocus}"  DockPanel.Dock="Bottom"/>
                         </DockPanel>
                     </Grid>
                     <DockPanel Margin="0,10,0,0">
-                        <TextBlock Text="Category:" FontWeight="SemiBold" VerticalAlignment="Center" Margin="0,0,10,0" DockPanel.Dock="Top"/>
-                        <ComboBox ItemsSource="{Binding Source={StaticResource NewRecordCategories}}" SelectedItem="{Binding NewRecord.Category}" DockPanel.Dock="Bottom"/>
+                        <TextBlock Text="{Binding Path=[Category],Source={StaticResource Localization}}" FontWeight="SemiBold" VerticalAlignment="Center" Margin="0,0,10,0" DockPanel.Dock="Top"/>
+                        <ComboBox ItemsSource="{Binding Source={StaticResource NewRecordCategories}}" SelectedItem="{Binding NewRecord.Category}" DockPanel.Dock="Bottom">
+                            <ComboBox.ItemTemplate>
+                                <DataTemplate>
+                                    <TextBlock Text="{Binding Converter={StaticResource EnumToLocalizedConverter}}" />
+                                </DataTemplate>
+                            </ComboBox.ItemTemplate>
+                        </ComboBox>
                     </DockPanel>
                     <DockPanel Margin="0,10,0,0">
-                        <TextBlock Text="Name:" FontWeight="SemiBold" VerticalAlignment="Center" Margin="0,0,10,0" DockPanel.Dock="Top"/>
+                        <TextBlock Text="{Binding Path=[Name],Source={StaticResource Localization}}" FontWeight="SemiBold" VerticalAlignment="Center" Margin="0,0,10,0" DockPanel.Dock="Top"/>
                         <TextBox Text="{Binding NewRecord.Name, UpdateSourceTrigger=PropertyChanged}" DockPanel.Dock="Bottom"/>
                     </DockPanel>
-                    <Button Content="Add Record" Command="{Binding AddRecordCommand}" Margin="0,10,0,0" HorizontalAlignment="Stretch"/>
+                    <Button Content="{Binding Path=[AddNewRecord],Source={StaticResource Localization}}" Command="{Binding AddRecordCommand}" Margin="0,10,0,0" HorizontalAlignment="Stretch"/>
                 </StackPanel>
             </Border>
             <Border Background="White" BorderBrush="#DDD" BorderThickness="1" CornerRadius="10" Margin="30,0,30,10" Visibility="{Binding SelectedTab,Converter={StaticResource RecordViewTabsVisibilityConverter},ConverterParameter=EditRecord}">
                 <StackPanel>
-                    <TextBlock Text="Edit Record"/>
+                    <TextBlock Text="{Binding Path=[EditRecord],Source={StaticResource Localization}}"/>
                     <TextBlock Text="{Binding EditRecord.Id,StringFormat={}ID: {0}}"/>
                     <DockPanel>
-                        <TextBlock Text="Type:" FontWeight="SemiBold" VerticalAlignment="Center" Margin="0,0,10,0" DockPanel.Dock="Top"/>
+                        <TextBlock Text="{Binding Path=[Type],Source={StaticResource Localization}}" FontWeight="SemiBold" VerticalAlignment="Center" Margin="0,0,10,0" DockPanel.Dock="Top"/>
                         <Grid DockPanel.Dock="Bottom">
                             <Grid.ColumnDefinitions>
                                 <ColumnDefinition Width="Auto"/>
                                 <ColumnDefinition Width="Auto"/>
                             </Grid.ColumnDefinitions>
-                            <RadioButton GroupName="RecordType" Content="Expense" IsChecked="{Binding EditRecord.Type,Converter={StaticResource NewRecordSelectedTypeConverter},ConverterParameter=Expense}" Margin="0,0,10,0"/>
-                            <RadioButton GroupName="RecordType" Content="Income" IsChecked="{Binding EditRecord.Type,Converter={StaticResource NewRecordSelectedTypeConverter},ConverterParameter=Income}" Margin="0,0,10,0" Grid.Column="1"/>
+                            <RadioButton GroupName="RecordType" Content="{Binding Path=[Expense],Source={StaticResource Localization}}" IsChecked="{Binding EditRecord.Type,Converter={StaticResource NewRecordSelectedTypeConverter},ConverterParameter=Expense}" Margin="0,0,10,0"/>
+                            <RadioButton GroupName="RecordType" Content="{Binding Path=[Income],Source={StaticResource Localization}}" IsChecked="{Binding EditRecord.Type,Converter={StaticResource NewRecordSelectedTypeConverter},ConverterParameter=Income}" Margin="0,0,10,0" Grid.Column="1"/>
                         </Grid>
                     </DockPanel>
                     <Grid>
@@ -354,23 +234,23 @@
                             <ColumnDefinition Width="*"/>
                         </Grid.ColumnDefinitions>
                         <DockPanel Margin="5">
-                            <TextBlock Text="Amount" DockPanel.Dock="Top"/>
+                            <TextBlock Text="{Binding Path=[Amount],Source={StaticResource Localization}}" DockPanel.Dock="Top"/>
                             <TextBox Text="{Binding EditRecord.Amount,UpdateSourceTrigger=LostFocus}" DockPanel.Dock="Bottom"/>
                         </DockPanel>
                         <DockPanel Grid.Column="1" Margin="5">
-                            <TextBlock Text="Date" DockPanel.Dock="Top"/>
+                            <TextBlock Text="{Binding Path=[Date],Source={StaticResource Localization}}" DockPanel.Dock="Top"/>
                             <DatePicker SelectedDate="{Binding EditRecord.Date,UpdateSourceTrigger=LostFocus}" DockPanel.Dock="Bottom"/>
                         </DockPanel>
                     </Grid>
                     <DockPanel Margin="0,10,0,0">
-                        <TextBlock Text="Category:" FontWeight="SemiBold" VerticalAlignment="Center" Margin="0,0,10,0" DockPanel.Dock="Top"/>
+                        <TextBlock Text="{Binding Path=[Category],Source={StaticResource Localization}}" FontWeight="SemiBold" VerticalAlignment="Center" Margin="0,0,10,0" DockPanel.Dock="Top"/>
                         <ComboBox ItemsSource="{Binding Source={StaticResource NewRecordCategories}}" SelectedItem="{Binding EditRecord.Category}" DockPanel.Dock="Bottom"/>
                     </DockPanel>
                     <DockPanel Margin="0,10,0,0">
-                        <TextBlock Text="Name:" FontWeight="SemiBold" VerticalAlignment="Center" Margin="0,0,10,0" DockPanel.Dock="Top"/>
+                        <TextBlock Text="{Binding Path=[Name],Source={StaticResource Localization}}" FontWeight="SemiBold" VerticalAlignment="Center" Margin="0,0,10,0" DockPanel.Dock="Top"/>
                         <TextBox Text="{Binding EditRecord.Name, UpdateSourceTrigger=PropertyChanged}" DockPanel.Dock="Bottom"/>
                     </DockPanel>
-                    <Button Content="Edit Record" Command="{Binding EditRecordSubmitCommand}" Margin="0,10,0,0" HorizontalAlignment="Stretch"/>
+                    <Button Content="{Binding Path=[EditRecord],Source={StaticResource Localization}}" Command="{Binding EditRecordSubmitCommand}" Margin="0,10,0,0" HorizontalAlignment="Stretch"/>
                 </StackPanel>
             </Border>
             </StackPanel>

@@ -17,7 +17,7 @@ namespace JuanNotTheHuman.Spending.Converters
          * Converts a decimal value to a currency string.
          * </summary>
          */
-        public object Convert(object value, Type targetType, object parameter,CultureInfo culture)
+        public object Convert(object value, Type targetType, object parameter, CultureInfo culture)
         {
             culture = new CultureInfo(CultureInfoHelper.Get());
             if (value is decimal decimalValue)
@@ -31,7 +31,7 @@ namespace JuanNotTheHuman.Spending.Converters
          * Converts a currency string back to a decimal value.
          * </summary>
          */
-        public object ConvertBack(object value, Type targetType, object parameter,CultureInfo culture)
+        public object ConvertBack(object value, Type targetType, object parameter, CultureInfo culture)
         {
             culture = new CultureInfo(CultureInfoHelper.Get());
             if (value is string stringValue && decimal.TryParse(stringValue, NumberStyles.Currency, culture, out var result))

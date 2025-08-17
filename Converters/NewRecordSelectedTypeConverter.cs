@@ -19,7 +19,7 @@ namespace JuanNotTheHuman.Spending.Converters
          */
         public object Convert(object value, Type targetType, object parameter, CultureInfo culture)
         {
-            if(value is RecordType recordType)
+            if (value is RecordType recordType)
             {
                 if (parameter is string param && Enum.TryParse(param, out RecordType selectedType))
                 {

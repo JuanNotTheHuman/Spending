@@ -21,7 +21,7 @@ namespace JuanNotTheHuman.Spending.Converters
         {
             if (value is RecordType recordType)
             {
-                if(recordType == RecordType.Income)
+                if (recordType == RecordType.Income)
                 {
                     return "🔺";
                 }
@@ -39,7 +39,7 @@ namespace JuanNotTheHuman.Spending.Converters
          */
         public object ConvertBack(object value, Type targetType, object parameter, CultureInfo culture)
         {
-            if(value is string icon)
+            if (value is string icon)
             {
                 switch (icon)
                 {

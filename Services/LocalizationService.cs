@@ -25,7 +25,7 @@ namespace JuanNotTheHuman.Spending.Services
          * <param name="key">The key for the localized string.</param>
          * <returns>The localized string.</returns>
          */
-        public string this[string key] => _resourceManager.GetString(key,Thread.CurrentThread.CurrentUICulture);
+        public string this[string key] => _resourceManager.GetString(key, Thread.CurrentThread.CurrentUICulture);
         /**
          * <summary>
          * A method to refresh the localization service, notifying any subscribers of property changes.

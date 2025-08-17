@@ -10,6 +10,8 @@
 
 namespace JuanNotTheHuman.Spending.Resources {
     using System;
+    
+    
     /// <summary>
     ///   Klasa zasobu wymagająca zdefiniowania typu do wyszukiwania zlokalizowanych ciągów itd.
     /// </summary>
@@ -37,7 +39,7 @@ namespace JuanNotTheHuman.Spending.Resources {
         internal static global::System.Resources.ResourceManager ResourceManager {
             get {
                 if (object.ReferenceEquals(resourceMan, null)) {
-                    global::System.Resources.ResourceManager temp = new global::System.Resources.ResourceManager("Spending.Resources.Resources", typeof(Resources).Assembly);
+                    global::System.Resources.ResourceManager temp = new global::System.Resources.ResourceManager("JuanNotTheHuman.Spending.Resources.Resources", typeof(Resources).Assembly);
                     resourceMan = temp;
                 }
                 return resourceMan;
@@ -59,6 +61,33 @@ namespace JuanNotTheHuman.Spending.Resources {
         }
         
         /// <summary>
+        /// Wyszukuje zlokalizowany ciąg podobny do ciągu Add New Record.
+        /// </summary>
+        internal static string AddNewRecord {
+            get {
+                return ResourceManager.GetString("AddNewRecord", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        /// Wyszukuje zlokalizowany ciąg podobny do ciągu All.
+        /// </summary>
+        internal static string All {
+            get {
+                return ResourceManager.GetString("All", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        /// Wyszukuje zlokalizowany ciąg podobny do ciągu Amount:.
+        /// </summary>
+        internal static string Amount {
+            get {
+                return ResourceManager.GetString("Amount", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         /// Wyszukuje zlokalizowany ciąg podobny do ciągu Back.
         /// </summary>
         internal static string ButtonBack {
@@ -68,146 +97,83 @@ namespace JuanNotTheHuman.Spending.Resources {
         }
         
         /// <summary>
+        /// Wyszukuje zlokalizowany ciąg podobny do ciągu Category:.
+        /// </summary>
+        internal static string Category {
+            get {
+                return ResourceManager.GetString("Category", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        /// Wyszukuje zlokalizowany ciąg podobny do ciągu Clear.
+        /// </summary>
+        internal static string ClearDatabaseButton {
+            get {
+                return ResourceManager.GetString("ClearDatabaseButton", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        /// Wyszukuje zlokalizowany ciąg podobny do ciągu Clear database:.
+        /// </summary>
+        internal static string ClearDatabaseText {
+            get {
+                return ResourceManager.GetString("ClearDatabaseText", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        /// Wyszukuje zlokalizowany ciąg podobny do ciągu Date:.
+        /// </summary>
+        internal static string Date {
+            get {
+                return ResourceManager.GetString("Date", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        /// Wyszukuje zlokalizowany ciąg podobny do ciągu Edit Record.
+        /// </summary>
+        internal static string EditRecord {
+            get {
+                return ResourceManager.GetString("EditRecord", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         /// Wyszukuje zlokalizowany ciąg podobny do ciągu Education.
         /// </summary>
-        internal static string CategoryEducation {
+        internal static string Education {
             get {
-                return ResourceManager.GetString("CategoryEducation", resourceCulture);
+                return ResourceManager.GetString("Education", resourceCulture);
             }
         }
         
         /// <summary>
         /// Wyszukuje zlokalizowany ciąg podobny do ciągu Entertainment.
         /// </summary>
-        internal static string CategoryEntertainment {
+        internal static string Entertainment {
             get {
-                return ResourceManager.GetString("CategoryEntertainment", resourceCulture);
+                return ResourceManager.GetString("Entertainment", resourceCulture);
             }
         }
         
         /// <summary>
-        /// Wyszukuje zlokalizowany ciąg podobny do ciągu Food.
+        /// Wyszukuje zlokalizowany ciąg podobny do ciągu Expense.
         /// </summary>
-        internal static string CategoryFood {
+        internal static string Expense {
             get {
-                return ResourceManager.GetString("CategoryFood", resourceCulture);
+                return ResourceManager.GetString("Expense", resourceCulture);
             }
         }
         
         /// <summary>
-        /// Wyszukuje zlokalizowany ciąg podobny do ciągu Gifts.
+        /// Wyszukuje zlokalizowany ciąg podobny do ciągu Expenses.
         /// </summary>
-        internal static string CategoryGifts {
+        internal static string Expenses {
             get {
-                return ResourceManager.GetString("CategoryGifts", resourceCulture);
-            }
-        }
-        
-        /// <summary>
-        /// Wyszukuje zlokalizowany ciąg podobny do ciągu Health.
-        /// </summary>
-        internal static string CategoryHealth {
-            get {
-                return ResourceManager.GetString("CategoryHealth", resourceCulture);
-            }
-        }
-        
-        /// <summary>
-        /// Wyszukuje zlokalizowany ciąg podobny do ciągu Home.
-        /// </summary>
-        internal static string CategoryHome {
-            get {
-                return ResourceManager.GetString("CategoryHome", resourceCulture);
-            }
-        }
-        
-        /// <summary>
-        /// Wyszukuje zlokalizowany ciąg podobny do ciągu Income.
-        /// </summary>
-        internal static string CategoryIncome {
-            get {
-                return ResourceManager.GetString("CategoryIncome", resourceCulture);
-            }
-        }
-        
-        /// <summary>
-        /// Wyszukuje zlokalizowany ciąg podobny do ciągu Other.
-        /// </summary>
-        internal static string CategoryOther {
-            get {
-                return ResourceManager.GetString("CategoryOther", resourceCulture);
-            }
-        }
-        
-        /// <summary>
-        /// Wyszukuje zlokalizowany ciąg podobny do ciągu Pets.
-        /// </summary>
-        internal static string CategoryPets {
-            get {
-                return ResourceManager.GetString("CategoryPets", resourceCulture);
-            }
-        }
-        
-        /// <summary>
-        /// Wyszukuje zlokalizowany ciąg podobny do ciągu Phone.
-        /// </summary>
-        internal static string CategoryPhone {
-            get {
-                return ResourceManager.GetString("CategoryPhone", resourceCulture);
-            }
-        }
-        
-        /// <summary>
-        /// Wyszukuje zlokalizowany ciąg podobny do ciągu Shopping.
-        /// </summary>
-        internal static string CategoryShopping {
-            get {
-                return ResourceManager.GetString("CategoryShopping", resourceCulture);
-            }
-        }
-        
-        /// <summary>
-        /// Wyszukuje zlokalizowany ciąg podobny do ciągu Subscriptions.
-        /// </summary>
-        internal static string CategorySubscriptions {
-            get {
-                return ResourceManager.GetString("CategorySubscriptions", resourceCulture);
-            }
-        }
-        
-        /// <summary>
-        /// Wyszukuje zlokalizowany ciąg podobny do ciągu Transport.
-        /// </summary>
-        internal static string CategoryTransport {
-            get {
-                return ResourceManager.GetString("CategoryTransport", resourceCulture);
-            }
-        }
-        
-        /// <summary>
-        /// Wyszukuje zlokalizowany ciąg podobny do ciągu Travel.
-        /// </summary>
-        internal static string CategoryTravel {
-            get {
-                return ResourceManager.GetString("CategoryTravel", resourceCulture);
-            }
-        }
-        
-        /// <summary>
-        /// Wyszukuje zlokalizowany ciąg podobny do ciągu Utilities.
-        /// </summary>
-        internal static string CategoryUtilities {
-            get {
-                return ResourceManager.GetString("CategoryUtilities", resourceCulture);
-            }
-        }
-        
-        /// <summary>
-        /// Wyszukuje zlokalizowany ciąg podobny do ciągu Vet.
-        /// </summary>
-        internal static string CategoryVet {
-            get {
-                return ResourceManager.GetString("CategoryVet", resourceCulture);
+                return ResourceManager.GetString("Expenses", resourceCulture);
             }
         }
         
@@ -230,6 +196,42 @@ namespace JuanNotTheHuman.Spending.Resources {
         }
         
         /// <summary>
+        /// Wyszukuje zlokalizowany ciąg podobny do ciągu Food.
+        /// </summary>
+        internal static string Food {
+            get {
+                return ResourceManager.GetString("Food", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        /// Wyszukuje zlokalizowany ciąg podobny do ciągu Gifts.
+        /// </summary>
+        internal static string Gifts {
+            get {
+                return ResourceManager.GetString("Gifts", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        /// Wyszukuje zlokalizowany ciąg podobny do ciągu Health.
+        /// </summary>
+        internal static string Health {
+            get {
+                return ResourceManager.GetString("Health", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        /// Wyszukuje zlokalizowany ciąg podobny do ciągu Home.
+        /// </summary>
+        internal static string Home {
+            get {
+                return ResourceManager.GetString("Home", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         /// Wyszukuje zlokalizowany ciąg podobny do ciągu Import.
         /// </summary>
         internal static string ImportDatabaseButton {
@@ -248,11 +250,65 @@ namespace JuanNotTheHuman.Spending.Resources {
         }
         
         /// <summary>
+        /// Wyszukuje zlokalizowany ciąg podobny do ciągu Income.
+        /// </summary>
+        internal static string Income {
+            get {
+                return ResourceManager.GetString("Income", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        /// Wyszukuje zlokalizowany ciąg podobny do ciągu Incomes.
+        /// </summary>
+        internal static string Incomes {
+            get {
+                return ResourceManager.GetString("Incomes", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        /// Wyszukuje zlokalizowany ciąg podobny do ciągu Title:.
+        /// </summary>
+        internal static string Name {
+            get {
+                return ResourceManager.GetString("Name", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         /// Wyszukuje zlokalizowany ciąg podobny do ciągu No transactions found..
         /// </summary>
         internal static string NoTransactionsMessage {
             get {
                 return ResourceManager.GetString("NoTransactionsMessage", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        /// Wyszukuje zlokalizowany ciąg podobny do ciągu Other.
+        /// </summary>
+        internal static string Other {
+            get {
+                return ResourceManager.GetString("Other", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        /// Wyszukuje zlokalizowany ciąg podobny do ciągu Pets.
+        /// </summary>
+        internal static string Pets {
+            get {
+                return ResourceManager.GetString("Pets", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        /// Wyszukuje zlokalizowany ciąg podobny do ciągu Phone.
+        /// </summary>
+        internal static string Phone {
+            get {
+                return ResourceManager.GetString("Phone", resourceCulture);
             }
         }
         
@@ -284,33 +340,6 @@ namespace JuanNotTheHuman.Spending.Resources {
         }
         
         /// <summary>
-        /// Wyszukuje zlokalizowany ciąg podobny do ciągu All.
-        /// </summary>
-        internal static string SelectableFilterCategory_All {
-            get {
-                return ResourceManager.GetString("SelectableFilterCategory_All", resourceCulture);
-            }
-        }
-        
-        /// <summary>
-        /// Wyszukuje zlokalizowany ciąg podobny do ciągu Expenses.
-        /// </summary>
-        internal static string SelectableFilterCategory_Expenses {
-            get {
-                return ResourceManager.GetString("SelectableFilterCategory_Expenses", resourceCulture);
-            }
-        }
-        
-        /// <summary>
-        /// Wyszukuje zlokalizowany ciąg podobny do ciągu Incomes.
-        /// </summary>
-        internal static string SelectableFilterCategory_Incomes {
-            get {
-                return ResourceManager.GetString("SelectableFilterCategory_Incomes", resourceCulture);
-            }
-        }
-        
-        /// <summary>
         /// Wyszukuje zlokalizowany ciąg podobny do ciągu (affects app language).
         /// </summary>
         internal static string SettingsCurrencyInfo {
@@ -334,6 +363,24 @@ namespace JuanNotTheHuman.Spending.Resources {
         internal static string SettingsTitle {
             get {
                 return ResourceManager.GetString("SettingsTitle", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        /// Wyszukuje zlokalizowany ciąg podobny do ciągu Shopping.
+        /// </summary>
+        internal static string Shopping {
+            get {
+                return ResourceManager.GetString("Shopping", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        /// Wyszukuje zlokalizowany ciąg podobny do ciągu Subscriptions.
+        /// </summary>
+        internal static string Subscriptions {
+            get {
+                return ResourceManager.GetString("Subscriptions", resourceCulture);
             }
         }
         
@@ -419,6 +466,33 @@ namespace JuanNotTheHuman.Spending.Resources {
         }
         
         /// <summary>
+        /// Wyszukuje zlokalizowany ciąg podobny do ciągu Transport.
+        /// </summary>
+        internal static string Transport {
+            get {
+                return ResourceManager.GetString("Transport", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        /// Wyszukuje zlokalizowany ciąg podobny do ciągu Travel.
+        /// </summary>
+        internal static string Travel {
+            get {
+                return ResourceManager.GetString("Travel", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        /// Wyszukuje zlokalizowany ciąg podobny do ciągu Type:.
+        /// </summary>
+        internal static string Type {
+            get {
+                return ResourceManager.GetString("Type", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         /// Wyszukuje zlokalizowany ciąg podobny do ciągu Expense.
         /// </summary>
         internal static string TypeExpense {
@@ -433,6 +507,24 @@ namespace JuanNotTheHuman.Spending.Resources {
         internal static string TypeIncome {
             get {
                 return ResourceManager.GetString("TypeIncome", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        /// Wyszukuje zlokalizowany ciąg podobny do ciągu Utilities.
+        /// </summary>
+        internal static string Utilities {
+            get {
+                return ResourceManager.GetString("Utilities", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        /// Wyszukuje zlokalizowany ciąg podobny do ciągu Vet.
+        /// </summary>
+        internal static string Vet {
+            get {
+                return ResourceManager.GetString("Vet", resourceCulture);
             }
         }
     }

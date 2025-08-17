@@ -1,14 +1,14 @@
-﻿using Microsoft.Win32;
-using JuanNotTheHuman.Spending.Commands;
+﻿using JuanNotTheHuman.Spending.Commands;
 using JuanNotTheHuman.Spending.Helpers;
 using JuanNotTheHuman.Spending.Services;
+using JuanNotTheHuman.Spending.Views;
+using Microsoft.Win32;
 using System;
 using System.Collections.ObjectModel;
 using System.Globalization;
 using System.Linq;
 using System.Windows;
 using System.Windows.Input;
-using JuanNotTheHuman.Spending.Views;
 
 namespace JuanNotTheHuman.Spending.ViewModels
 {
@@ -74,9 +74,9 @@ namespace JuanNotTheHuman.Spending.ViewModels
                 {
                     DatabaseService.ImportDatabase(ofselect.FileName);
                 }
-                catch(Exception ex)
+                catch (Exception ex)
                 {
-                    MessageBox.Show(ex.Message);
+                    NotificationService.ShowNotification("Error", ex.Message);
                 }
             }
         });
@@ -98,18 +98,54 @@ namespace JuanNotTheHuman.Spending.ViewModels
                 try
                 {
                     DatabaseService.ExportDatabase(sfd.FileName);
-                    MessageBox.Show("Database exported successfully.", "Export Successful", MessageBoxButton.OK, MessageBoxImage.Information);
+                    NotificationService.ShowNotification("Success", "Database exported successfully");
                 }
                 catch (Exception ex)
                 {
-                    MessageBox.Show(ex.Message);
+                    NotificationService.ShowNotification("Error", ex.Message);
+                }
+            }
+        });
+        public ICommand ClearDatabaseCommand => new RelayCommand(() =>
+        {
+            bool confirm = NotificationService.AskConfirmation("Clear database","Are you sure you want to clear the database? This action cannot be undone.");
+            if (confirm)
+            {
+                try
+                {
+                    bool empty = DatabaseService.GetRecordsAsync().Result.Count == 0;
+                    if (empty)
+                    {
+                        NotificationService.ShowNotification("Info", "The database is already empty.");
+                        return;
+                    }
+                    bool copy = NotificationService.AskConfirmation("Backup database", "Do you want to create a backup before clearing the database?");
+                    if(copy)
+                    {
+                        var sfd = new SaveFileDialog
+                        {
+                            Title = "Backup Database File",
+                            Filter = "Database Files (*.db)|*.db|All Files (*.*)|*.*",
+                            InitialDirectory = Environment.GetFolderPath(Environment.SpecialFolder.MyDocuments)
+                        };
+                        if (sfd.ShowDialog() == true)
+                        {
+                            DatabaseService.ExportDatabase(sfd.FileName);
+                        }
+                    }
+                    DatabaseService.Clear();
+                    NotificationService.ShowNotification("Success","Database cleared successfully");
+                }
+                catch (Exception ex)
+                {
+                    NotificationService.ShowNotification("Error", ex.Message);
                 }
             }
         });
         public SettingsViewViewModel()
         {
             Currencies = new ObservableCollection<CurrencyInfo>(CurrencyHelper.GetAllCurrencies());
-            CultureInfo currentCulture = CultureInfo.CurrentCulture;
+            CultureInfo currentCulture = new CultureInfo(CultureInfoHelper.Get());
             string currentCurrencySymbol = new RegionInfo(currentCulture.Name).ISOCurrencySymbol;
             SelectedCurrency = Currencies.FirstOrDefault(c => c.ISOCurrencySymbol == currentCurrencySymbol);
         }

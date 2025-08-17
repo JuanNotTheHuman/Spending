@@ -144,55 +144,55 @@
   <data name="TransactionsOverview" xml:space="preserve">
     <value>Overview</value>
   </data>
-  <data name="CategoryFood" xml:space="preserve">
+  <data name="Food" xml:space="preserve">
     <value>Food</value>
   </data>
-  <data name="CategoryTransport" xml:space="preserve">
+  <data name="Transport" xml:space="preserve">
     <value>Transport</value>
   </data>
-  <data name="CategoryEntertainment" xml:space="preserve">
+  <data name="Entertainment" xml:space="preserve">
     <value>Entertainment</value>
   </data>
-  <data name="CategoryHealth" xml:space="preserve">
+  <data name="Health" xml:space="preserve">
     <value>Health</value>
   </data>
-  <data name="CategoryEducation" xml:space="preserve">
+  <data name="Education" xml:space="preserve">
     <value>Education</value>
   </data>
-  <data name="CategoryShopping" xml:space="preserve">
+  <data name="Shopping" xml:space="preserve">
     <value>Shopping</value>
   </data>
-  <data name="CategoryUtilities" xml:space="preserve">
+  <data name="Utilities" xml:space="preserve">
     <value>Utilities</value>
   </data>
-  <data name="CategoryOther" xml:space="preserve">
+  <data name="Other" xml:space="preserve">
     <value>Other</value>
   </data>
-  <data name="CategoryIncome" xml:space="preserve">
+  <data name="Income" xml:space="preserve">
     <value>Income</value>
   </data>
-  <data name="CategoryPets" xml:space="preserve">
+  <data name="Pets" xml:space="preserve">
     <value>Pets</value>
   </data>
-  <data name="CategoryVet" xml:space="preserve">
+  <data name="Vet" xml:space="preserve">
     <value>Vet</value>
   </data>
-  <data name="CategoryGifts" xml:space="preserve">
+  <data name="Gifts" xml:space="preserve">
     <value>Gifts</value>
   </data>
-  <data name="CategoryTravel" xml:space="preserve">
+  <data name="Travel" xml:space="preserve">
     <value>Travel</value>
   </data>
-  <data name="CategoryHome" xml:space="preserve">
+  <data name="Home" xml:space="preserve">
     <value>Home</value>
   </data>
-  <data name="CategorySubscriptions" xml:space="preserve">
+  <data name="Subscriptions" xml:space="preserve">
     <value>Subscriptions</value>
   </data>
   <data name="TotalBalance" xml:space="preserve">
     <value>Total Balance</value>
   </data>
-  <data name="CategoryPhone" xml:space="preserve">
+  <data name="Phone" xml:space="preserve">
     <value>Phone</value>
   </data>
   <data name="TypeIncome" xml:space="preserve">
@@ -210,13 +210,13 @@
   <data name="RecordViewTab_EditRecord" xml:space="preserve">
     <value>Edit Record</value>
   </data>
-  <data name="SelectableFilterCategory_Incomes" xml:space="preserve">
+  <data name="Incomes" xml:space="preserve">
     <value>Incomes</value>
   </data>
-  <data name="SelectableFilterCategory_Expenses" xml:space="preserve">
+  <data name="Expenses" xml:space="preserve">
     <value>Expenses</value>
   </data>
-  <data name="SelectableFilterCategory_All" xml:space="preserve">
+  <data name="All" xml:space="preserve">
     <value>All</value>
   </data>
   <data name="SettingsCurrencyInfo" xml:space="preserve">
@@ -242,5 +242,35 @@
   </data>
   <data name="ExportDatabaseButton" xml:space="preserve">
     <value>Export</value>
+  </data>
+  <data name="AddNewRecord" xml:space="preserve">
+    <value>Add New Record</value>
+  </data>
+  <data name="Type" xml:space="preserve">
+    <value>Type:</value>
+  </data>
+  <data name="Expense" xml:space="preserve">
+    <value>Expense</value>
+  </data>
+  <data name="Amount" xml:space="preserve">
+    <value>Amount:</value>
+  </data>
+  <data name="Date" xml:space="preserve">
+    <value>Date:</value>
+  </data>
+  <data name="Category" xml:space="preserve">
+    <value>Category:</value>
+  </data>
+  <data name="Name" xml:space="preserve">
+    <value>Title:</value>
+  </data>
+  <data name="EditRecord" xml:space="preserve">
+    <value>Edit Record</value>
+  </data>
+  <data name="ClearDatabaseText" xml:space="preserve">
+    <value>Clear database:</value>
+  </data>
+  <data name="ClearDatabaseButton" xml:space="preserve">
+    <value>Clear</value>
   </data>
 </root>

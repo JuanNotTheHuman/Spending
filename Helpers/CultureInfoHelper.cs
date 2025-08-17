@@ -18,7 +18,7 @@ namespace JuanNotTheHuman.Spending.Helpers
          */
         public static void Update(string value)
         {
-            using(var streamwriter = new StreamWriter("CultureInfo.txt", false))
+            using (var streamwriter = new StreamWriter("CultureInfo.txt", false))
             {
                 streamwriter.WriteLine(value);
             }
@@ -34,7 +34,7 @@ namespace JuanNotTheHuman.Spending.Helpers
          */
         public static string Get()
         {
-            if(File.Exists("CultureInfo.txt"))
+            if (File.Exists("CultureInfo.txt"))
             {
                 using (var streamreader = new StreamReader("CultureInfo.txt"))
                 {

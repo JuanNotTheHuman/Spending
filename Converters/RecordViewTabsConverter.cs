@@ -21,7 +21,8 @@ namespace JuanNotTheHuman.Spending.Converters
          */
         public object Convert(object value, Type targetType, object parameter, CultureInfo culture)
         {
-            if(value is RecordViewTabs selectedTab && parameter is string tabName &&  Enum.TryParse(tabName, out RecordViewTabs thisTab)){
+            if (value is RecordViewTabs selectedTab && parameter is string tabName && Enum.TryParse(tabName, out RecordViewTabs thisTab))
+            {
                 return selectedTab == thisTab ? Brushes.White : Brushes.LightGray;
             }
             return Brushes.LightGray;
@@ -33,7 +34,7 @@ namespace JuanNotTheHuman.Spending.Converters
          */
         public object ConvertBack(object value, Type targetType, object parameter, CultureInfo culture)
         {
-            if(value is Brush brush && parameter is string tabName && Enum.TryParse(tabName, out RecordViewTabs thisTab))
+            if (value is Brush brush && parameter is string tabName && Enum.TryParse(tabName, out RecordViewTabs thisTab))
             {
                 return brush == Brushes.White ? thisTab : Binding.DoNothing;
             }

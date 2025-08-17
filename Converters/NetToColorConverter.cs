@@ -1,9 +1,5 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.Globalization;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using System.Windows.Data;
 using System.Windows.Media;
 
@@ -47,17 +43,17 @@ namespace JuanNotTheHuman.Spending.Converters
          */
         public object ConvertBack(object value, Type targetType, object parameter, CultureInfo culture)
         {
-            if(value is SolidColorBrush color)
+            if (value is SolidColorBrush color)
             {
-                if(color.Color == Colors.Green)
+                if (color.Color == Colors.Green)
                 {
                     return 1m;
                 }
-                else if(color.Color == Colors.Red)
+                else if (color.Color == Colors.Red)
                 {
                     return -1m;
                 }
-                else if(color.Color == Colors.Gray)
+                else if (color.Color == Colors.Gray)
                 {
                     return 0m;
                 }

@@ -40,7 +40,7 @@ namespace JuanNotTheHuman.Spending.Converters
          */
         public object ConvertBack(object value, Type targetType, object parameter, CultureInfo culture)
         {
-            if(value is SolidColorBrush brush)
+            if (value is SolidColorBrush brush)
             {
                 if (brush.Color == Colors.Green)
                 {

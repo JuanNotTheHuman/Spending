@@ -1,13 +1,14 @@
 ﻿using JuanNotTheHuman.Spending.Commands;
 using JuanNotTheHuman.Spending.Enumerables;
+using JuanNotTheHuman.Spending.Helpers;
 using JuanNotTheHuman.Spending.Models;
 using JuanNotTheHuman.Spending.Services;
 using JuanNotTheHuman.Spending.Views;
 using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
+using System.Globalization;
 using System.Linq;
-using System.Windows;
 using System.Windows.Input;
 
 namespace JuanNotTheHuman.Spending.ViewModels
@@ -150,6 +151,7 @@ namespace JuanNotTheHuman.Spending.ViewModels
          */
         public ICommand SwitchTabCommand => new RelayCommand<string>((tab) =>
         {
+            CultureInfo.CurrentCulture = new CultureInfo(CultureInfoHelper.Get());
             if (Enum.TryParse(tab, out RecordViewTabs selectedTab))
             {
                 SelectedTab = selectedTab;
@@ -297,7 +299,7 @@ namespace JuanNotTheHuman.Spending.ViewModels
                          .Select(dr => new DailyRecords
                          {
                              Date = new DateTime(g.Key.Year, g.Key.Month, dr.Key),
-                             Records = new ObservableCollection<RecordViewModel>(dr.ToList().Select(r => new RecordViewModel(r)))
+                             Records = new ObservableCollection<RecordViewModel>(dr.ToList().Select(r => new RecordViewModel(r)).OrderBy(mr=>mr.Date))
                          })
                     )
                 }).OrderBy(mr => mr.Date);
@@ -344,7 +346,6 @@ namespace JuanNotTheHuman.Spending.ViewModels
         public ICommand EditRecordSubmitCommand => new RelayCommand(() =>
         {
             SelectedTab = RecordViewTabs.Overview;
-            MessageBox.Show(EditRecord.GetRecord().Amount.ToString());
             DatabaseService.EditRecordAsync(EditRecord.GetRecord()).Wait();
             LoadData();
             EditRecord = null;
