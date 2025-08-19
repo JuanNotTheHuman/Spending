@@ -28,5 +28,21 @@ namespace JuanNotTheHuman.Spending.Services
             var result = MessageBox.Show(message, title, MessageBoxButton.YesNo, MessageBoxImage.Question);
             return result == MessageBoxResult.Yes;
         }
+        public static string AskInput(string title, string message, string defaultValue = "")
+        {
+            var vm = new ViewModels.InputWindowViewModel(title, message)
+            {
+                Input = defaultValue
+            };
+            var window = new Views.InputWindow(vm);
+            if (window.ShowDialog() == true)
+            {
+                return vm.Input;
+            }
+            else
+            {
+                return null;
+            }
+        }
     }
 }

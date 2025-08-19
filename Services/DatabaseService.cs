@@ -3,8 +3,11 @@ using JuanNotTheHuman.Spending.Models;
 using Microsoft.Data.Sqlite;
 using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.IO;
 using System.Linq;
+using System.Net.Http;
+using System.Net.Http.Headers;
 using System.Text;
 using System.Threading.Tasks;
 using System.Windows;
@@ -18,23 +21,70 @@ namespace JuanNotTheHuman.Spending.Services
      */
     internal static class DatabaseService
     {
+        private static readonly string ConnectionString = UserSecretsService.GetSecret("Turso:ConnectionString");
         static DatabaseService()
         {
-            using (var connection = new SqliteConnection("Data Source=spending.db"))
+            UserSecretsService.SetSecret("Turso:ConnectionString", "https://spending-juanthehuman.aws-eu-west-1.turso.io/v2/pipeline");
+            if (string.IsNullOrEmpty(ConnectionString))
             {
-                connection.Open();
-                var command = connection.CreateCommand();
-                command.CommandText = @"
-                    CREATE TABLE IF NOT EXISTS Records (
-                        Id INTEGER PRIMARY KEY AUTOINCREMENT,
-                        Name TEXT NOT NULL,
-                        Amount REAL NOT NULL,
-                        Date TEXT NOT NULL,
-                        Category INTEGER NOT NULL,
-                        Type INTEGER NOT NULL
-                    )";
-                command.ExecuteNonQuery();
+                bool set = NotificationService.AskConfirmation("Question", "The connection string for the database is not set. Do you want to set it now?");
+                if (set)
+                {
+                    string connectionString = NotificationService.AskInput(ConnectionString, "Set Connection String", "Please enter the connection string for the database:");
+                    if (!string.IsNullOrEmpty(connectionString))
+                    {
+                        UserSecretsService.SetSecret("Turso:ConnectionString", connectionString);
+                        ConnectionString = connectionString;
+                    }
+                    else
+                    {
+                        throw new Exception("Connection string cannot be empty.");
+                    }
+                }
+                else
+                {
+                    throw new Exception("Connection string for the database is not set.");
+                }
             }
+            var body = new RootRequest
+            {
+                requests = new List<SqlRequest>
+                {
+                    new SqlRequest
+                    {
+                        type = "execute",
+                        stmt = new SqlStatement
+                        {
+                            sql = "CREATE TABLE IF NOT EXISTS Records (Id INTEGER PRIMARY KEY AUTOINCREMENT, Name TEXT, Amount REAL, Date TEXT, Category INTEGER, Type INTEGER)"
+                        }
+                    },
+                    new SqlRequest
+                    {
+                        type = "close"
+                    }
+                }
+            };
+            if(string.IsNullOrEmpty(UserSecretsService.GetSecret("Turso:Token")))
+            {
+                bool set = NotificationService.AskConfirmation("Question", "The token for the database is not set. Do you want to set it now?");
+                if (set)
+                {
+                    string token = NotificationService.AskInput("Set Token", "Please enter the token for the database:");
+                    if (!string.IsNullOrEmpty(token))
+                    {
+                        UserSecretsService.SetSecret("Turso:Token", token);
+                    }
+                    else
+                    {
+                        throw new Exception("Token cannot be empty.");
+                    }
+                }
+                else
+                {
+                    throw new Exception("Token for the database is not set.");
+                }
+            }
+            _ = ApiService.Post(ConnectionString, body, UserSecretsService.GetSecret("Turso:Token"));
         }
         /**
          * <summary>
@@ -43,30 +93,39 @@ namespace JuanNotTheHuman.Spending.Services
          */
         public static async Task<List<Record>> GetRecordsAsync()
         {
-            using (var connection = new SqliteConnection("Data Source=spending.db"))
+            try
             {
-                await connection.OpenAsync();
-                var command = connection.CreateCommand();
-                command.CommandText = "SELECT * FROM Records";
-                var records = new List<Record>();
-                using (var reader = await command.ExecuteReaderAsync())
+                var body = new RootRequest
                 {
-                    while (await reader.ReadAsync())
+                    requests = new List<SqlRequest>
+                {
+                    new SqlRequest
                     {
-                        var record = new Record
+                        type = "execute",
+                        stmt = new SqlStatement
                         {
-                            Id = reader.GetInt32(0),
-                            Name = reader.GetString(1),
-                            Amount = reader.GetDecimal(2),
-                            Date = DateTime.Parse(reader.GetString(3)),
-                            Category = (Category)reader.GetInt32(4),
-                            Type = (RecordType)reader.GetInt32(5)
-                        };
-                        records.Add(record);
+                            sql = "SELECT * FROM records"
+                        }
+                    },
+                    new SqlRequest
+                    {
+                        type = "close"
                     }
                 }
-                return records;
+                };
+                Record[] recordsArr = await ApiService.Post<Record[]>(ConnectionString, new FetchOptions { Authorization = UserSecretsService.GetSecret("Turso:Token"), Method = "POST", Body = body });
+                if (recordsArr == null)
+                {
+                    return new List<Record>();
+                }
+                return recordsArr.ToList();
             }
+            catch (Exception ex)
+            {
+                NotificationService.ShowNotification("Error",$"Failed to retrieve records from database:\n{ex.Message}");
+                return new List<Record>();
+            }
+
         }
         /**
          * <summary>
@@ -76,30 +135,38 @@ namespace JuanNotTheHuman.Spending.Services
          */
         public static async Task<List<Record>> GetRecordsByCategoryAsync(Category category)
         {
-            using (var connection = new SqliteConnection("Data Source=spending.db"))
+            var body = new RootRequest
             {
-                await connection.OpenAsync();
-                var command = connection.CreateCommand();
-                command.CommandText = "SELECT * FROM Records WHERE Category = @Category";
-                command.Parameters.AddWithValue("@Category", (int)category);
-                var records = new List<Record>();
-                using (var reader = await command.ExecuteReaderAsync())
+                requests = new List<SqlRequest>
                 {
-                    while (await reader.ReadAsync())
+                    new SqlRequest
                     {
-                        var record = new Record
+                        type = "execute",
+                        stmt = new SqlStatement
                         {
-                            Id = reader.GetInt32(0),
-                            Name = reader.GetString(1),
-                            Amount = reader.GetDecimal(2),
-                            Date = DateTime.Parse(reader.GetString(3)),
-                            Category = (Category)reader.GetInt32(4),
-                            Type = (RecordType)reader.GetInt32(5)
-                        };
-                        records.Add(record);
+                            sql = "SELECT * FROM Records WHERE Category=@Category"
+                        }
+                    },
+                    new SqlRequest
+                    {
+                        type = "close"
                     }
                 }
-                return records;
+            };
+            body.requests[0].stmt.sql = body.requests[0].stmt.sql.Replace("@Category", ((int)category).ToString());
+            try
+            {
+                Record[] recordsArr = await ApiService.Post<Record[]>(ConnectionString, new FetchOptions { Authorization = UserSecretsService.GetSecret("Turso:Token"), Method = "POST", Body = body });
+                if (recordsArr == null)
+                {
+                    return new List<Record>();
+                }
+                return recordsArr.ToList();
+            }
+            catch(Exception ex)
+            {
+                NotificationService.ShowNotification("Error", $"Failed to load records from database:\n{ex.Message}");
+                return new List<Record>();
             }
         }
         /**
@@ -110,30 +177,39 @@ namespace JuanNotTheHuman.Spending.Services
          */
         public static async Task<List<Record>> GetRecordsByTypeAsync(RecordType type)
         {
-            using (var connection = new SqliteConnection("Data Source=spending.db"))
+            var body = new RootRequest
             {
-                await connection.OpenAsync();
-                var command = connection.CreateCommand();
-                command.CommandText = "SELECT * FROM Records WHERE Type = @Type";
-                command.Parameters.AddWithValue("@Type", (int)type);
-                var records = new List<Record>();
-                using (var reader = await command.ExecuteReaderAsync())
+                requests = new List<SqlRequest>
                 {
-                    while (await reader.ReadAsync())
+                    new SqlRequest
                     {
-                        var record = new Record
+                        type = "execute",
+                        stmt = new SqlStatement
                         {
-                            Id = reader.GetInt32(0),
-                            Name = reader.GetString(1),
-                            Amount = reader.GetDecimal(2),
-                            Date = DateTime.Parse(reader.GetString(3)),
-                            Category = (Category)reader.GetInt32(4),
-                            Type = (RecordType)reader.GetInt32(5)
-                        };
-                        records.Add(record);
+                            sql = "SELECT * FROM Records WHERE Type=@Type"
+                        }
+                    },
+                    new SqlRequest
+                    {
+                        type = "close"
                     }
                 }
-                return records;
+            };
+            body.requests[0].stmt.sql = body.requests[0].stmt.sql.Replace("@Type", ((int)type).ToString());
+            try
+            {
+
+                Record[] recordsArr = await ApiService.Post<Record[]>(ConnectionString, new FetchOptions { Authorization = UserSecretsService.GetSecret("Turso:Token"), Method = "GET", Body = body });
+                if (recordsArr == null)
+                {
+                    return new List<Record>();
+                }
+                return recordsArr.Where(r => r.Type == type).ToList();
+            }
+            catch(Exception ex)
+            {
+                NotificationService.ShowNotification("Error", $"Failed to load records from database:\n{ex.Message}");
+                return new List<Record>();
             }
         }
         /**
@@ -144,21 +220,35 @@ namespace JuanNotTheHuman.Spending.Services
          */
         public static async Task EditRecordAsync(Record record)
         {
-            using (var connection = new SqliteConnection("Data Source=spending.db"))
+            var body = new RootRequest
             {
-                await connection.OpenAsync();
-                var command = connection.CreateCommand();
-                command.CommandText = @"
-                    UPDATE Records
-                    SET Name = @Name, Amount = @Amount, Date = @Date, Category = @Category, Type = @Type
-                    WHERE Id = @Id";
-                command.Parameters.AddWithValue("@Id", record.Id);
-                command.Parameters.AddWithValue("@Name", record.Name);
-                command.Parameters.AddWithValue("@Amount", record.Amount);
-                command.Parameters.AddWithValue("@Date", record.Date.ToString("o"));
-                command.Parameters.AddWithValue("@Category", (int)record.Category);
-                command.Parameters.AddWithValue("@Type", (int)record.Type);
-                await command.ExecuteNonQueryAsync();
+                requests = new List<SqlRequest>
+                {
+                    new SqlRequest
+                    {
+                        type = "execute",
+                        stmt = new SqlStatement
+                        {
+                            sql = "UPDATE Records SET Name = @Name, Amount = @Amount, Date = @Date, Category = @Category, Type = @Type WHERE Id = @Id"
+                        }
+                    },
+                    new SqlRequest
+                    {
+                        type = "close"
+                    }
+                }
+            };
+            body.requests[0].stmt.sql = body.requests[0].stmt.sql
+                .Replace("@Name", record.Name)
+                .Replace("@Amount", record.Amount.ToString())
+                .Replace("@Date", record.Date.ToString("o"))
+                .Replace("@Category", ((int)record.Category).ToString())
+                .Replace("@Type", ((int)record.Type).ToString())
+                .Replace("@Id", record.Id.ToString());
+            bool success = await ApiService.Post(ConnectionString, body,UserSecretsService.GetSecret("Turso:Token"));
+            if (!success)
+            {
+                throw new Exception("Failed to edit record in the database.");
             }
         }
         /**
@@ -169,19 +259,34 @@ namespace JuanNotTheHuman.Spending.Services
          */
         public static async Task AddRecordAsync(Record record)
         {
-            using (var connection = new SqliteConnection("Data Source=spending.db"))
+            var body = new RootRequest
             {
-                await connection.OpenAsync();
-                var command = connection.CreateCommand();
-                command.CommandText = @"
-                    INSERT INTO Records (Name, Amount, Date, Category, Type)
-                    VALUES (@Name, @Amount, @Date, @Category, @Type)";
-                command.Parameters.AddWithValue("@Name", record.Name);
-                command.Parameters.AddWithValue("@Amount", record.Amount);
-                command.Parameters.AddWithValue("@Date", record.Date.ToString("o"));
-                command.Parameters.AddWithValue("@Category", (int)record.Category);
-                command.Parameters.AddWithValue("@Type", (int)record.Type);
-                await command.ExecuteNonQueryAsync();
+                requests = new List<SqlRequest>
+                {
+                    new SqlRequest
+                    {
+                        type = "execute",
+                        stmt = new SqlStatement
+                        {
+                            sql = "INSERT INTO Records (Name, Amount, Date, Category, Type) VALUES (@Name, @Amount, @Date, @Category, @Type)"
+                        }
+                    },
+                    new SqlRequest
+                    {
+                        type = "close"
+                    }
+                }
+            };
+            body.requests[0].stmt.sql = body.requests[0].stmt.sql
+                .Replace("@Name", record.Name)
+                .Replace("@Amount", record.Amount.ToString())
+                .Replace("@Date", record.Date.ToString("o"))
+                .Replace("@Category", ((int)record.Category).ToString())
+                .Replace("@Type", ((int)record.Type).ToString());
+            bool success = await ApiService.Post(ConnectionString, body,UserSecretsService.GetSecret("Turso:Token"));
+            if (!success)
+            {
+                throw new Exception("Failed to add record to the database.");
             }
         }
         /**
@@ -192,13 +297,29 @@ namespace JuanNotTheHuman.Spending.Services
          */
         public static async Task DeleteRecordAsync(Record record)
         {
-            using (var connection = new SqliteConnection("Data Source=spending.db"))
+            var body = new RootRequest
             {
-                await connection.OpenAsync();
-                var command = connection.CreateCommand();
-                command.CommandText = "DELETE FROM Records WHERE Id = @Id";
-                command.Parameters.AddWithValue("@Id", record.Id);
-                await command.ExecuteNonQueryAsync();
+                requests = new List<SqlRequest>
+                {
+                    new SqlRequest
+                    {
+                        type = "execute",
+                        stmt = new SqlStatement
+                        {
+                            sql = "DELETE FROM Records WHERE Id = @Id"
+                        }
+                    },
+                    new SqlRequest
+                    {
+                        type = "close"
+                    }
+                }
+            };
+            body.requests[0].stmt.sql = body.requests[0].stmt.sql.Replace("@Id", record.Id.ToString());
+            bool success = await ApiService.Post(ConnectionString, body,UserSecretsService.GetSecret("Turso:Token"));
+            if (!success)
+            {
+                throw new Exception("Failed to delete record from the database.");
             }
         }
         /**
@@ -209,13 +330,29 @@ namespace JuanNotTheHuman.Spending.Services
          */
         public static async Task DeleteRecordAsync(int id)
         {
-            using (var connection = new SqliteConnection("Data Source=spending.db"))
+            var body = new RootRequest
             {
-                await connection.OpenAsync();
-                var command = connection.CreateCommand();
-                command.CommandText = "DELETE FROM Records WHERE Id = @Id";
-                command.Parameters.AddWithValue("@Id", id);
-                await command.ExecuteNonQueryAsync();
+                requests = new List<SqlRequest>
+                {
+                    new SqlRequest
+                    {
+                        type = "execute",
+                        stmt = new SqlStatement
+                        {
+                            sql = "DELETE FROM Records WHERE Id = @Id"
+                        }
+                    },
+                    new SqlRequest
+                    {
+                        type = "close"
+                    }
+                }
+            };
+            body.requests[0].stmt.sql = body.requests[0].stmt.sql.Replace("@Id", id.ToString());
+            bool success = await ApiService.Post(ConnectionString, body,UserSecretsService.GetSecret("Turso:Token"));
+            if (!success)
+            {
+                throw new Exception("Failed to delete record from the database.");
             }
         }
         /**
@@ -228,9 +365,13 @@ namespace JuanNotTheHuman.Spending.Services
             var records = await GetRecordsAsync();
             var currentMonth = DateTime.Now.Month;
             var currentYear = DateTime.Now.Year;
-            return records
-                .Where(r => r.Date.Month == currentMonth && r.Date.Year == currentYear)
-                .Sum(r => r.Type == RecordType.Income ? r.Amount : -r.Amount);
+            var income = records
+                .Where(r => r.Date.Month == currentMonth && r.Date.Year == currentYear && r.Type == RecordType.Income)
+                .Sum(r => r.Amount);
+            var expenses = records
+                .Where(r => r.Date.Month == currentMonth && r.Date.Year == currentYear && r.Type == RecordType.Expense)
+                .Sum(r => r.Amount);
+            return income - expenses;
         }
         /**
          * <summary>
@@ -404,20 +545,52 @@ namespace JuanNotTheHuman.Spending.Services
          */
         public static Task ExportDatabase(string filePath)
         {
-            File.Copy("spending.db", filePath, true);
+            var records = GetRecordsAsync().Result;
+            if (File.Exists(filePath))
+            {
+                File.Delete(filePath);
+            }
+            using (var connection = new SqliteConnection($"Data Source={filePath}"))
+            {
+                connection.Open();
+                var command = connection.CreateCommand();
+                command.CommandText = "CREATE TABLE IF NOT EXISTS Records (Id INTEGER PRIMARY KEY AUTOINCREMENT, Name TEXT, Amount REAL, Date TEXT, Category INTEGER, Type INTEGER)";
+                command.ExecuteNonQuery();
+                var insertCommand = connection.CreateCommand();
+                var stringBuilder = new StringBuilder();
+                stringBuilder.AppendLine("INSERT INTO Records (Name, Amount, Date, Category, Type) VALUES ");
+                foreach (var record in records)
+                {
+                    stringBuilder.AppendLine($"('{record.Name}', {record.Amount}, '{record.Date:yyyy-MM-dd HH:mm:ss}', {(int)record.Category}, {(int)record.Type}),");
+                }
+                stringBuilder.Length -= 3;
+                insertCommand.CommandText = stringBuilder.ToString();
+                insertCommand.ExecuteNonQuery();
+                NotificationService.ShowNotification("Export Successful", "The database has been successfully exported.");
+            }
             return Task.CompletedTask;
         }
         public static Task Clear()
         {
-            using (var connection = new SqliteConnection("Data Source=spending.db"))
+            var body = new RootRequest
             {
-                connection.Open();
-                var command = connection.CreateCommand();
-                command.CommandText = "DELETE FROM Records";
-                command.ExecuteNonQuery();
-            }
-            NotificationService.ShowNotification("Database Cleared", "All records have been cleared from the database.");
-            return Task.CompletedTask;
+                requests = new List<SqlRequest>
+                {
+                    new SqlRequest
+                    {
+                        type = "execute",
+                        stmt = new SqlStatement
+                        {
+                            sql = "DELETE FROM Records"
+                        }
+                    },
+                    new SqlRequest
+                    {
+                        type = "close"
+                    }
+                }
+            };
+            return ApiService.Post(ConnectionString, body, UserSecretsService.GetSecret("Torso:Token"));
         }
     }
 }

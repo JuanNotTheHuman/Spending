@@ -8,7 +8,7 @@ namespace JuanNotTheHuman.Spending.ViewModels
      * A base class for view models that implements INotifyPropertyChanged.
      * </summary>
      */
-    internal class ViewModelBase : INotifyPropertyChanged
+    public class ViewModelBase : INotifyPropertyChanged
     {
         public event PropertyChangedEventHandler PropertyChanged;
         protected void OnPropertyChanged([CallerMemberName] string propertyName = null)
