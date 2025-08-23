@@ -157,7 +157,7 @@ namespace JuanNotTheHuman.Spending.ViewModels
         {
             _name = string.Empty;
             _amount = 0;
-            _date = DateTime.Now;
+            _date = DateTime.Today;
             _category = Category.Other;
             _type = RecordType.Expense;
         }

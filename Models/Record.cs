@@ -63,7 +63,6 @@ namespace JuanNotTheHuman.Spending.Models
             Category = category;
             Type = type;
         }
-
         public Record() { }
     }
 }

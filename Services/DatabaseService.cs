@@ -24,7 +24,6 @@ namespace JuanNotTheHuman.Spending.Services
         private static readonly string ConnectionString = UserSecretsService.GetSecret("Turso:ConnectionString");
         static DatabaseService()
         {
-            UserSecretsService.SetSecret("Turso:ConnectionString", "https://spending-juanthehuman.aws-eu-west-1.turso.io/v2/pipeline");
             if (string.IsNullOrEmpty(ConnectionString))
             {
                 bool set = NotificationService.AskConfirmation("Question", "The connection string for the database is not set. Do you want to set it now?");
@@ -123,6 +122,7 @@ namespace JuanNotTheHuman.Spending.Services
             catch (Exception ex)
             {
                 NotificationService.ShowNotification("Error",$"Failed to retrieve records from database:\n{ex.Message}");
+                Debug.WriteLine(ex);
                 return new List<Record>();
             }
 
@@ -166,6 +166,7 @@ namespace JuanNotTheHuman.Spending.Services
             catch(Exception ex)
             {
                 NotificationService.ShowNotification("Error", $"Failed to load records from database:\n{ex.Message}");
+                Debug.WriteLine(ex);
                 return new List<Record>();
             }
         }
@@ -209,6 +210,7 @@ namespace JuanNotTheHuman.Spending.Services
             catch(Exception ex)
             {
                 NotificationService.ShowNotification("Error", $"Failed to load records from database:\n{ex.Message}");
+                                Debug.WriteLine(ex);
                 return new List<Record>();
             }
         }
@@ -259,16 +261,23 @@ namespace JuanNotTheHuman.Spending.Services
          */
         public static async Task AddRecordAsync(Record record)
         {
-            var body = new RootRequest
+            try
             {
-                requests = new List<SqlRequest>
+                var body = new RootRequest
+                {
+                    requests = new List<SqlRequest>
                 {
                     new SqlRequest
                     {
                         type = "execute",
                         stmt = new SqlStatement
                         {
-                            sql = "INSERT INTO Records (Name, Amount, Date, Category, Type) VALUES (@Name, @Amount, @Date, @Category, @Type)"
+                            sql = "INSERT INTO Records (Name, Amount, Date, Category, Type) VALUES (@Name,@Amount,@Date,@Category,@Type)"
+                                .Replace("@Name", $"\"{record.Name}\"")
+                                .Replace("@Amount", $"\"{record.Amount.ToString()}\"")
+                                .Replace("@Date", $"\"{record.Date.ToString("o")}\"")
+                                .Replace("@Category", $"\"{((int) record.Category)}\"")
+                                .Replace("@Type", $"\"{((int) record.Type)}\"")
                         }
                     },
                     new SqlRequest
@@ -276,17 +285,17 @@ namespace JuanNotTheHuman.Spending.Services
                         type = "close"
                     }
                 }
-            };
-            body.requests[0].stmt.sql = body.requests[0].stmt.sql
-                .Replace("@Name", record.Name)
-                .Replace("@Amount", record.Amount.ToString())
-                .Replace("@Date", record.Date.ToString("o"))
-                .Replace("@Category", ((int)record.Category).ToString())
-                .Replace("@Type", ((int)record.Type).ToString());
-            bool success = await ApiService.Post(ConnectionString, body,UserSecretsService.GetSecret("Turso:Token"));
-            if (!success)
+                };
+                bool success = await ApiService.Post(ConnectionString, body, UserSecretsService.GetSecret("Turso:Token"));
+                if (!success)
+                {
+                    throw new Exception("Failed to add record to the database.");
+                }
+            }
+            catch(Exception ex)
             {
-                throw new Exception("Failed to add record to the database.");
+                NotificationService.ShowNotification("Error", $"Failed to add record to database:\n{ex.Message}");
+                Debug.WriteLine(ex);
             }
         }
         /**
