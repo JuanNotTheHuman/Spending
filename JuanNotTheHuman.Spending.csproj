@@ -80,9 +80,11 @@
     </Compile>
     <Compile Include="Commands\RelayCommand.cs" />
     <Compile Include="Converters\BoolToVisibilityConverter.cs" />
+    <Compile Include="Converters\ByteArrayToImageConverter.cs" />
     <Compile Include="Converters\CalendarConverter.cs" />
     <Compile Include="Converters\CurrencyConverter.cs" />
     <Compile Include="Converters\EnumToLocalizedConverter.cs" />
+    <Compile Include="Converters\HasImageToVisibilityConverter.cs" />
     <Compile Include="Converters\NetToColorConverter.cs" />
     <Compile Include="Converters\NewRecordSelectedTypeConverter.cs" />
     <Compile Include="Converters\RecordTypeColorConverter.cs" />

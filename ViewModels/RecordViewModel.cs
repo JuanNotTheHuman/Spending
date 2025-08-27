@@ -1,6 +1,9 @@
 ﻿using JuanNotTheHuman.Spending.Enumerables;
 using JuanNotTheHuman.Spending.Models;
 using System;
+using System.Diagnostics;
+using System.Windows.Media;
+using System.Windows.Media.Imaging;
 
 namespace JuanNotTheHuman.Spending.ViewModels
 {
@@ -17,6 +20,7 @@ namespace JuanNotTheHuman.Spending.ViewModels
         private DateTime _date;
         private Category _category;
         private RecordType _type;
+        private byte[] _image;
         /**
          * <summary>
          * Gets or sets the ID of the record.
@@ -34,14 +38,7 @@ namespace JuanNotTheHuman.Spending.ViewModels
         public string Name
         {
             get => _name;
-            set
-            {
-                if (_name != value)
-                {
-                    _name = value;
-                    OnPropertyChanged(nameof(Name));
-                }
-            }
+            set => Set(ref _name, value, nameof(Name));
         }
         /**
          * <summary>
@@ -51,14 +48,7 @@ namespace JuanNotTheHuman.Spending.ViewModels
         public decimal Amount
         {
             get => _amount;
-            set
-            {
-                if (_amount != value)
-                {
-                    _amount = value;
-                    OnPropertyChanged(nameof(Amount));
-                }
-            }
+            set => Set(ref _amount, value, nameof(Amount));
         }
         /**
          * <summary>
@@ -68,14 +58,7 @@ namespace JuanNotTheHuman.Spending.ViewModels
         public DateTime Date
         {
             get => _date;
-            set
-            {
-                if (_date != value)
-                {
-                    _date = value;
-                    OnPropertyChanged(nameof(Date));
-                }
-            }
+            set => Set(ref _date, value, nameof(Date));
         }
         /**
          * <summary>
@@ -85,14 +68,7 @@ namespace JuanNotTheHuman.Spending.ViewModels
         public Category Category
         {
             get => _category;
-            set
-            {
-                if (_category != value)
-                {
-                    _category = value;
-                    OnPropertyChanged(nameof(Category));
-                }
-            }
+            set => Set(ref _category, value, nameof(Category));
         }
         /**
          * <summary>
@@ -102,14 +78,17 @@ namespace JuanNotTheHuman.Spending.ViewModels
         public RecordType Type
         {
             get => _type;
-            set
-            {
-                if (_type != value)
-                {
-                    _type = value;
-                    OnPropertyChanged(nameof(Type));
-                }
-            }
+            set => Set(ref _type, value, nameof(Type));
+        }
+        /**
+         * <summary>
+         * Gets or sets the image associated with the record.
+         * </summary>
+         */
+        public byte[] Image
+        {
+            get => _image;
+            set=> Set(ref _image, value, nameof(Image));
         }
         /**
          * <summary>
@@ -118,7 +97,7 @@ namespace JuanNotTheHuman.Spending.ViewModels
          */
         public Record GetRecord()
         {
-            return new Record(_id, _name, _amount, _date, _category, _type);
+            return new Record(_id, _name, _amount, _date, _category, _type,_image);
         }
         /**
          * <summary>
@@ -134,6 +113,7 @@ namespace JuanNotTheHuman.Spending.ViewModels
             _date = record.Date;
             _category = record.Category;
             _type = record.Type;
+            _image = record.Image;
         }
         /**
          * <summary>
@@ -145,13 +125,14 @@ namespace JuanNotTheHuman.Spending.ViewModels
          * <param name="category">The category of the record.</param>
          * <param name="type">The type of the record (Expense or Income).</param>
          */
-        public RecordViewModel(string name, decimal amount, DateTime date, Category category, RecordType type)
+        public RecordViewModel(string name, decimal amount, DateTime date, Category category, RecordType type, byte[] image)
         {
             _name = name;
             _amount = amount;
             _date = date;
             _category = category;
             _type = type;
+            _image = image;
         }
         public RecordViewModel()
         {
@@ -160,6 +141,7 @@ namespace JuanNotTheHuman.Spending.ViewModels
             _date = DateTime.Now;
             _category = Category.Other;
             _type = RecordType.Expense;
+            _image = null;
         }
     }
 }

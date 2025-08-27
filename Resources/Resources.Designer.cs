@@ -88,11 +88,38 @@ namespace JuanNotTheHuman.Spending.Resources {
         }
         
         /// <summary>
+        /// Wyszukuje zlokalizowany ciąg podobny do ciągu Do you want to create a backup of the database?.
+        /// </summary>
+        internal static string BackupDatabaseText {
+            get {
+                return ResourceManager.GetString("BackupDatabaseText", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        /// Wyszukuje zlokalizowany ciąg podobny do ciągu Backup database.
+        /// </summary>
+        internal static string BackupDatabaseTitle {
+            get {
+                return ResourceManager.GetString("BackupDatabaseTitle", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         /// Wyszukuje zlokalizowany ciąg podobny do ciągu Back.
         /// </summary>
         internal static string ButtonBack {
             get {
                 return ResourceManager.GetString("ButtonBack", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        /// Wyszukuje zlokalizowany ciąg podobny do ciągu Cancel.
+        /// </summary>
+        internal static string Cancel {
+            get {
+                return ResourceManager.GetString("Cancel", resourceCulture);
             }
         }
         
@@ -115,6 +142,15 @@ namespace JuanNotTheHuman.Spending.Resources {
         }
         
         /// <summary>
+        /// Wyszukuje zlokalizowany ciąg podobny do ciągu Are you sure you want to clear the database? This action cannot be undone..
+        /// </summary>
+        internal static string ClearDatabaseConfirmationText {
+            get {
+                return ResourceManager.GetString("ClearDatabaseConfirmationText", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         /// Wyszukuje zlokalizowany ciąg podobny do ciągu Clear database:.
         /// </summary>
         internal static string ClearDatabaseText {
@@ -124,11 +160,110 @@ namespace JuanNotTheHuman.Spending.Resources {
         }
         
         /// <summary>
+        /// Wyszukuje zlokalizowany ciąg podobny do ciągu Clear database.
+        /// </summary>
+        internal static string ClearDatabaseTitle {
+            get {
+                return ResourceManager.GetString("ClearDatabaseTitle", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        /// Wyszukuje zlokalizowany ciąg podobny do ciągu Confirm.
+        /// </summary>
+        internal static string Confirm {
+            get {
+                return ResourceManager.GetString("Confirm", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        /// Wyszukuje zlokalizowany ciąg podobny do ciągu All records have been deleted from the database.
+        /// </summary>
+        internal static string DatabaseClearedText {
+            get {
+                return ResourceManager.GetString("DatabaseClearedText", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        /// Wyszukuje zlokalizowany ciąg podobny do ciągu Database cleared.
+        /// </summary>
+        internal static string DatabaseClearedTitle {
+            get {
+                return ResourceManager.GetString("DatabaseClearedTitle", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        /// Wyszukuje zlokalizowany ciąg podobny do ciągu The database is empty..
+        /// </summary>
+        internal static string DatabaseEmptyText {
+            get {
+                return ResourceManager.GetString("DatabaseEmptyText", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        /// Wyszukuje zlokalizowany ciąg podobny do ciągu Database exported successfully.
+        /// </summary>
+        internal static string DatabaseExportSuccessText {
+            get {
+                return ResourceManager.GetString("DatabaseExportSuccessText", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        /// Wyszukuje zlokalizowany ciąg podobny do ciągu Import result.
+        /// </summary>
+        internal static string DatabaseImportResultsTitle {
+            get {
+                return ResourceManager.GetString("DatabaseImportResultsTitle", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        /// Wyszukuje zlokalizowany ciąg podobny do ciągu Database successfully imported..
+        /// </summary>
+        internal static string DatabaseImportSuccessText {
+            get {
+                return ResourceManager.GetString("DatabaseImportSuccessText", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        /// Wyszukuje zlokalizowany ciąg podobny do ciągu Import Successful.
+        /// </summary>
+        internal static string DatabaseImportSuccessTitle {
+            get {
+                return ResourceManager.GetString("DatabaseImportSuccessTitle", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         /// Wyszukuje zlokalizowany ciąg podobny do ciągu Date:.
         /// </summary>
         internal static string Date {
             get {
                 return ResourceManager.GetString("Date", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        /// Wyszukuje zlokalizowany ciąg podobny do ciągu Are you sure you want to delete this record?.
+        /// </summary>
+        internal static string DeleteRecordText {
+            get {
+                return ResourceManager.GetString("DeleteRecordText", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        /// Wyszukuje zlokalizowany ciąg podobny do ciągu Delete Record.
+        /// </summary>
+        internal static string DeleteRecordTitle {
+            get {
+                return ResourceManager.GetString("DeleteRecordTitle", resourceCulture);
             }
         }
         
@@ -156,6 +291,15 @@ namespace JuanNotTheHuman.Spending.Resources {
         internal static string Entertainment {
             get {
                 return ResourceManager.GetString("Entertainment", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        /// Wyszukuje zlokalizowany ciąg podobny do ciągu Error.
+        /// </summary>
+        internal static string Error {
+            get {
+                return ResourceManager.GetString("Error", resourceCulture);
             }
         }
         
@@ -232,6 +376,15 @@ namespace JuanNotTheHuman.Spending.Resources {
         }
         
         /// <summary>
+        /// Wyszukuje zlokalizowany ciąg podobny do ciągu Image Preview.
+        /// </summary>
+        internal static string ImagePreview {
+            get {
+                return ResourceManager.GetString("ImagePreview", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         /// Wyszukuje zlokalizowany ciąg podobny do ciągu Import.
         /// </summary>
         internal static string ImportDatabaseButton {
@@ -246,6 +399,15 @@ namespace JuanNotTheHuman.Spending.Resources {
         internal static string ImportDatabaseText {
             get {
                 return ResourceManager.GetString("ImportDatabaseText", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        /// Wyszukuje zlokalizowany ciąg podobny do ciągu Do you want to import data from matching tables?.
+        /// </summary>
+        internal static string ImportDataQuestion {
+            get {
+                return ResourceManager.GetString("ImportDataQuestion", resourceCulture);
             }
         }
         
@@ -268,11 +430,47 @@ namespace JuanNotTheHuman.Spending.Resources {
         }
         
         /// <summary>
+        /// Wyszukuje zlokalizowany ciąg podobny do ciągu Uploaded Image:.
+        /// </summary>
+        internal static string IsImageUploaded {
+            get {
+                return ResourceManager.GetString("IsImageUploaded", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        /// Wyszukuje zlokalizowany ciąg podobny do ciągu Matches.
+        /// </summary>
+        internal static string Matches {
+            get {
+                return ResourceManager.GetString("Matches", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         /// Wyszukuje zlokalizowany ciąg podobny do ciągu Title:.
         /// </summary>
         internal static string Name {
             get {
                 return ResourceManager.GetString("Name", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        /// Wyszukuje zlokalizowany ciąg podobny do ciągu No tables found in database..
+        /// </summary>
+        internal static string NoTablesMessage {
+            get {
+                return ResourceManager.GetString("NoTablesMessage", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        /// Wyszukuje zlokalizowany ciąg podobny do ciągu Doesn&apos;t match.
+        /// </summary>
+        internal static string NotMatches {
+            get {
+                return ResourceManager.GetString("NotMatches", resourceCulture);
             }
         }
         
@@ -381,6 +579,15 @@ namespace JuanNotTheHuman.Spending.Resources {
         internal static string Subscriptions {
             get {
                 return ResourceManager.GetString("Subscriptions", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        /// Wyszukuje zlokalizowany ciąg podobny do ciągu Success.
+        /// </summary>
+        internal static string Success {
+            get {
+                return ResourceManager.GetString("Success", resourceCulture);
             }
         }
         
@@ -507,6 +714,24 @@ namespace JuanNotTheHuman.Spending.Resources {
         internal static string TypeIncome {
             get {
                 return ResourceManager.GetString("TypeIncome", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        /// Wyszukuje zlokalizowany ciąg podobny do ciągu Upload.
+        /// </summary>
+        internal static string UploadImageButton {
+            get {
+                return ResourceManager.GetString("UploadImageButton", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        /// Wyszukuje zlokalizowany ciąg podobny do ciągu Upload image.
+        /// </summary>
+        internal static string UploadImageText {
+            get {
+                return ResourceManager.GetString("UploadImageText", resourceCulture);
             }
         }
         

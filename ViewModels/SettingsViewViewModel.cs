@@ -7,147 +7,153 @@ using System;
 using System.Collections.ObjectModel;
 using System.Globalization;
 using System.Linq;
-using System.Windows;
 using System.Windows.Input;
 
 namespace JuanNotTheHuman.Spending.ViewModels
 {
-    /**
-     * <summary>
-     * A view model for the settings view.
-     * </summary>
-     */
+    /// <summary>
+    /// A view model for the settings view.
+    /// </summary>
     internal class SettingsViewViewModel : ViewModelBase
     {
         private CurrencyInfo _selectedCurrency;
-        /**
-         * <summary>
-         * A collection of available currencies.
-         * </summary>
-         */
+
+        /// <summary>
+        /// A collection of available currencies.
+        /// </summary>
         public ObservableCollection<CurrencyInfo> Currencies { get; }
-        /**
-         * <summary>
-         * The currently selected currency.
-         * </summary>
-         */
+
+        /// <summary>
+        /// The currently selected currency.
+        /// </summary>
         public CurrencyInfo SelectedCurrency
         {
             get => _selectedCurrency;
             set
             {
-                if (_selectedCurrency != value)
-                {
-                    _selectedCurrency = value;
-                    OnPropertyChanged();
-                    CultureInfo.CurrentCulture = new CultureInfo(value.CultureName);
-                    CultureInfoHelper.Update(value.CultureName);
-                    LocalizationService.Instance.Refresh();
-                }
+                Set(ref _selectedCurrency, value);
+                ApplyCurrency(value);
             }
         }
-        /**
-         * <summary>
-         * Command to navigate back to the records view.
-         * </summary>
-         */
-        public ICommand BackCommand => new RelayCommand(() =>
-        {
-            NavigationService.Navigate(new RecordsView());
-        });
-        /**
-         * <summary>
-         * Command to import a database file.
-         * </summary>
-         */
-        public ICommand ImportDatabaseCommand => new RelayCommand(() =>
-        {
-            var ofselect = new OpenFileDialog
-            {
-                Title = "Select Database File",
-                Filter = "Database Files (*.db)|*.db|All Files (*.*)|*.*",
-                InitialDirectory = Environment.GetFolderPath(Environment.SpecialFolder.MyDocuments)
-            };
-            if (ofselect.ShowDialog() == true)
-            {
-                try
-                {
-                    DatabaseService.ImportDatabase(ofselect.FileName);
-                }
-                catch (Exception ex)
-                {
-                    NotificationService.ShowNotification("Error", ex.Message);
-                }
-            }
-        });
-        /**
-         * <summary>
-         * Command to export the current database.
-         * </summary>
-         */
-        public ICommand ExportDatabaseCommand => new RelayCommand(() =>
-        {
-            var sfd = new SaveFileDialog
-            {
-                Title = "Export Database File",
-                Filter = "Database Files (*.db)|*.db|All Files (*.*)|*.*",
-                InitialDirectory = Environment.GetFolderPath(Environment.SpecialFolder.MyDocuments)
-            };
-            if (sfd.ShowDialog() == true)
-            {
-                try
-                {
-                    DatabaseService.ExportDatabase(sfd.FileName);
-                    NotificationService.ShowNotification("Success", "Database exported successfully");
-                }
-                catch (Exception ex)
-                {
-                    NotificationService.ShowNotification("Error", ex.Message);
-                }
-            }
-        });
-        public ICommand ClearDatabaseCommand => new RelayCommand(() =>
-        {
-            bool confirm = NotificationService.AskConfirmation("Clear database","Are you sure you want to clear the database? This action cannot be undone.");
-            if (confirm)
-            {
-                try
-                {
-                    bool empty = DatabaseService.GetRecordsAsync().Result.Count == 0;
-                    if (empty)
-                    {
-                        NotificationService.ShowNotification("Info", "The database is already empty.");
-                        return;
-                    }
-                    bool copy = NotificationService.AskConfirmation("Backup database", "Do you want to create a backup before clearing the database?");
-                    if(copy)
-                    {
-                        var sfd = new SaveFileDialog
-                        {
-                            Title = "Backup Database File",
-                            Filter = "Database Files (*.db)|*.db|All Files (*.*)|*.*",
-                            InitialDirectory = Environment.GetFolderPath(Environment.SpecialFolder.MyDocuments)
-                        };
-                        if (sfd.ShowDialog() == true)
-                        {
-                            DatabaseService.ExportDatabase(sfd.FileName);
-                        }
-                    }
-                    DatabaseService.Clear();
-                    NotificationService.ShowNotification("Success","Database cleared successfully");
-                }
-                catch (Exception ex)
-                {
-                    NotificationService.ShowNotification("Error", ex.Message);
-                }
-            }
-        });
+        public ICommand BackCommand { get; }
+        public ICommand ImportDatabaseCommand { get; }
+        public ICommand ExportDatabaseCommand { get; }
+        public ICommand ClearDatabaseCommand { get; }
+
         public SettingsViewViewModel()
         {
             Currencies = new ObservableCollection<CurrencyInfo>(CurrencyHelper.GetAllCurrencies());
-            CultureInfo currentCulture = new CultureInfo(CultureInfoHelper.Get());
-            string currentCurrencySymbol = new RegionInfo(currentCulture.Name).ISOCurrencySymbol;
+            var currentCulture = new CultureInfo(CultureInfoHelper.Get());
+            var currentCurrencySymbol = new RegionInfo(currentCulture.Name).ISOCurrencySymbol;
             SelectedCurrency = Currencies.FirstOrDefault(c => c.ISOCurrencySymbol == currentCurrencySymbol);
+            BackCommand = new RelayCommand(NavigateBack);
+            ImportDatabaseCommand = new RelayCommand(ImportDatabase);
+            ExportDatabaseCommand = new RelayCommand(ExportDatabase);
+            ClearDatabaseCommand = new RelayCommand(ClearDatabase);
+        }
+        private void ApplyCurrency(CurrencyInfo currency)
+        {
+            if (currency == null) return;
+            CultureInfo.CurrentCulture = new CultureInfo(currency.CultureName);
+            CultureInfoHelper.Update(currency.CultureName);
+            LocalizationService.Instance.Refresh();
+        }
+
+        private void NavigateBack()
+        {
+            NavigationService.Navigate(new RecordsView());
+        }
+
+        private void ImportDatabase()
+        {
+            var ofd = CreateOpenFileDialog(LocalizationService.Instance["ImportDatabaseButton"]);
+            if (ofd.ShowDialog() != true) return;
+
+            try
+            {
+                DatabaseService.ImportDatabase(ofd.FileName);
+            }
+            catch (Exception ex)
+            {
+                NotificationService.ShowNotification(LocalizationService.Instance["Error"], ex.Message);
+            }
+        }
+
+        private void ExportDatabase()
+        {
+            var sfd = CreateSaveFileDialog(LocalizationService.Instance["ExportDatabaseButton"]);
+            if (sfd.ShowDialog() != true) return;
+
+            try
+            {
+                DatabaseService.ExportDatabase(sfd.FileName);
+                NotificationService.ShowNotification(
+                    LocalizationService.Instance["Success"],
+                    LocalizationService.Instance["DatabaseExportSuccessText"]);
+            }
+            catch (Exception ex)
+            {
+                NotificationService.ShowNotification(LocalizationService.Instance["Error"], ex.Message);
+            }
+        }
+
+        private void ClearDatabase()
+        {
+            if (!NotificationService.AskConfirmation(
+                LocalizationService.Instance["ClearDatabaseTitle"],
+                LocalizationService.Instance["ClearDatabaseConfirmationText"]))
+                return;
+
+            try
+            {
+                var empty = DatabaseService.GetRecordsAsync().Result.Count == 0;
+                if (empty)
+                {
+                    NotificationService.ShowNotification(
+                        LocalizationService.Instance["Error"],
+                        LocalizationService.Instance["DatabaseEmptyText"]);
+                    return;
+                }
+
+                var copy = NotificationService.AskConfirmation(
+                    LocalizationService.Instance["BackupDatabaseTitle"],
+                    LocalizationService.Instance["BackupDatabaseText"]);
+
+                if (copy)
+                {
+                    var backupDialog = CreateSaveFileDialog(LocalizationService.Instance["BackupDatabaseTitle"]);
+                    if (backupDialog.ShowDialog() == true)
+                        DatabaseService.ExportDatabase(backupDialog.FileName);
+                }
+
+                DatabaseService.Clear();
+                NotificationService.ShowNotification(
+                    LocalizationService.Instance["Success"],
+                    LocalizationService.Instance["DatabaseClearedText"]);
+            }
+            catch (Exception ex)
+            {
+                NotificationService.ShowNotification(LocalizationService.Instance["Error"], ex.Message);
+            }
+        }
+        private static OpenFileDialog CreateOpenFileDialog(string title)
+        {
+            return new OpenFileDialog
+            {
+                Title = title,
+                Filter = "Database Files (*.db)|*.db|All Files (*.*)|*.*",
+                InitialDirectory = Environment.GetFolderPath(Environment.SpecialFolder.MyDocuments)
+            };
+        }
+
+        private static SaveFileDialog CreateSaveFileDialog(string title)
+        {
+            return new SaveFileDialog
+            {
+                Title = title,
+                Filter = "Database Files (*.db)|*.db|All Files (*.*)|*.*",
+                InitialDirectory = Environment.GetFolderPath(Environment.SpecialFolder.MyDocuments)
+            };
         }
     }
 }

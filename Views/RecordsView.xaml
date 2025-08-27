@@ -143,14 +143,13 @@
                                                                                     </Border>
                                                                                 </StackPanel>
                                                                                 <TextBlock Text="{Binding Name}" FontSize="12" Foreground="Gray"/>
+                                                                                <Border Style="{StaticResource RoundedImageContainer}" BorderBrush="Gray" BorderThickness="1" Visibility="{Binding Image,Converter={StaticResource HasImageToVisibilityConverter}}">
+                                                                                    <Image Source="{Binding Image,Converter={StaticResource ByteArrayToImageConverter}}" Height="100" Margin="5"/>
+                                                                                </Border>
                                                                             </StackPanel>
                                                                             <StackPanel Orientation="Horizontal" DockPanel.Dock="Right" VerticalAlignment="Top" HorizontalAlignment="Right">
-                                                                                <Button Content="✏️" Command="{Binding DataContext.EditRecordCommand,RelativeSource={RelativeSource AncestorType=Page}}"
-                            CommandParameter="{Binding}"/>
-                                                                                <Button Content="🗑️"
-                            Command="{Binding DataContext.DeleteRecordCommand,RelativeSource={RelativeSource AncestorType=Page}}"
-                            CommandParameter="{Binding}"
-                            Foreground="Red"/>
+                                                                                <Button Content="✏️" Command="{Binding DataContext.EditRecordCommand,RelativeSource={RelativeSource AncestorType=Page}}" CommandParameter="{Binding}"/>
+                                                                                <Button Content="🗑️" Command="{Binding DataContext.DeleteRecordCommand,RelativeSource={RelativeSource AncestorType=Page}}" CommandParameter="{Binding}" Foreground="Red"/>
                                                                             </StackPanel>
                                                                         </DockPanel>
                                                                     </Border>
@@ -210,6 +209,20 @@
                         <TextBlock Text="{Binding Path=[Name],Source={StaticResource Localization}}" FontWeight="SemiBold" VerticalAlignment="Center" Margin="0,0,10,0" DockPanel.Dock="Top"/>
                         <TextBox Text="{Binding NewRecord.Name, UpdateSourceTrigger=PropertyChanged}" DockPanel.Dock="Bottom"/>
                     </DockPanel>
+                    <DockPanel Margin="0,10,0,50" Visibility="{Binding NewRecord.Image,Converter={StaticResource HasImageToVisibilityConverter},ConverterParameter=Reverse}">
+                        <TextBlock Text="{Binding Path=[UploadImageText],Source={StaticResource Localization}}" FontWeight="SemiBold" VerticalAlignment="Center" Margin="0,0,10,0" DockPanel.Dock="Top"/>
+                        <Button Content="{Binding Path=[UploadImageButton],Source={StaticResource Localization}}" Command="{Binding UploadNewImageCommand}" DockPanel.Dock="Bottom"/>
+                    </DockPanel>
+                    <Grid Visibility="{Binding NewRecord.Image,Converter={StaticResource HasImageToVisibilityConverter}}" Margin="0,10,0,50">
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="Auto"/>
+                            <ColumnDefinition Width="50"/>
+                        </Grid.ColumnDefinitions>
+                        <Border Style="{StaticResource RoundedImageContainer}" BorderBrush="Gray" BorderThickness="1"  DockPanel.Dock="Left">
+                            <Image Source="{Binding NewRecord.Image,Converter={StaticResource ByteArrayToImageConverter}}" Height="100" Margin="5"/>
+                        </Border>
+                        <Button Grid.Column="1" Content="❌" Command="{Binding RemoveNewImageCommand}" DockPanel.Dock="Top" Foreground="Red" Width="50" Height="50"/>
+                    </Grid>
                     <Button Content="{Binding Path=[AddNewRecord],Source={StaticResource Localization}}" Command="{Binding AddRecordCommand}" Margin="0,10,0,0" HorizontalAlignment="Stretch"/>
                 </StackPanel>
             </Border>
@@ -250,6 +263,20 @@
                         <TextBlock Text="{Binding Path=[Name],Source={StaticResource Localization}}" FontWeight="SemiBold" VerticalAlignment="Center" Margin="0,0,10,0" DockPanel.Dock="Top"/>
                         <TextBox Text="{Binding EditRecord.Name, UpdateSourceTrigger=PropertyChanged}" DockPanel.Dock="Bottom"/>
                     </DockPanel>
+                    <DockPanel Margin="0,10,0,50" Visibility="{Binding EditRecord.Image,Converter={StaticResource HasImageToVisibilityConverter},ConverterParameter=Reverse}">
+                        <TextBlock Text="{Binding Path=[UploadImageText],Source={StaticResource Localization}}" FontWeight="SemiBold" VerticalAlignment="Center" Margin="0,0,10,0" DockPanel.Dock="Top"/>
+                        <Button Content="{Binding Path=[UploadImageButton],Source={StaticResource Localization}}" Command="{Binding UploadEditImageCommand}" DockPanel.Dock="Bottom"/>
+                    </DockPanel>
+                    <Grid Visibility="{Binding EditRecord.Image,Converter={StaticResource HasImageToVisibilityConverter}}" Margin="0,10,0,50">
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="Auto"/>
+                            <ColumnDefinition Width="50"/>
+                        </Grid.ColumnDefinitions>
+                        <Border Style="{StaticResource RoundedImageContainer}" BorderBrush="Gray" BorderThickness="1"  DockPanel.Dock="Left">
+                            <Image Source="{Binding EditRecord.Image,Converter={StaticResource ByteArrayToImageConverter}}" Height="100" Margin="5"/>
+                        </Border>
+                        <Button Grid.Column="1" Content="❌" Command="{Binding RemoveEditImageCommand}" DockPanel.Dock="Top" Foreground="Red" Width="50" Height="50"/>
+                    </Grid>
                     <Button Content="{Binding Path=[EditRecord],Source={StaticResource Localization}}" Command="{Binding EditRecordSubmitCommand}" Margin="0,10,0,0" HorizontalAlignment="Stretch"/>
                 </StackPanel>
             </Border>

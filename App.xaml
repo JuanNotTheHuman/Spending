@@ -118,6 +118,10 @@
             <Setter Property="Background" Value="LightGray"/>
             <Setter Property="BorderThickness" Value="0"/>
         </Style>
+        <Style x:Key="RoundedImageContainer" TargetType="Border">
+            <Setter Property="CornerRadius" Value="20"/>
+            <Setter Property="ClipToBounds" Value="True"/>
+        </Style>
         <converters:CalendarConverter x:Key="CalendarConverter"/>
         <converters:CurrencyConverter x:Key="CurrencyConverter"/>
         <converters:RecordTypeColorConverter x:Key="RecordTypeColorConverter"/>
@@ -128,6 +132,8 @@
         <converters:NetToColorConverter x:Key="NetToColorConverter"/>
         <converters:RecordViewTabsConverter x:Key="RecordViewTabsConverter"/>
         <converters:EnumToLocalizedConverter x:Key="EnumToLocalizedConverter"/>
+        <converters:HasImageToVisibilityConverter x:Key="HasImageToVisibilityConverter"/>
+        <converters:ByteArrayToImageConverter x:Key="ByteArrayToImageConverter"/>
         <ObjectDataProvider x:Key="SelectableFilterCategories" MethodName="GetValues" ObjectType="{x:Type sys:Enum}">
             <ObjectDataProvider.MethodParameters>
                 <x:Type TypeName="enumerables:SelectableFilterCategories"/>

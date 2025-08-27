@@ -3,6 +3,7 @@ using JuanNotTheHuman.Spending.Models;
 using Microsoft.Data.Sqlite;
 using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.IO;
 using System.Linq;
 using System.Text;
@@ -18,9 +19,10 @@ namespace JuanNotTheHuman.Spending.Services
      */
     internal static class DatabaseService
     {
+        private readonly static string _connectionString = "Data Source=spending.db";
         static DatabaseService()
         {
-            using (var connection = new SqliteConnection("Data Source=spending.db"))
+            using (var connection = new SqliteConnection(_connectionString))
             {
                 connection.Open();
                 var command = connection.CreateCommand();
@@ -31,9 +33,19 @@ namespace JuanNotTheHuman.Spending.Services
                         Amount REAL NOT NULL,
                         Date TEXT NOT NULL,
                         Category INTEGER NOT NULL,
-                        Type INTEGER NOT NULL
+                        Type INTEGER NOT NULL,
+                        Image BLOB
                     )";
                 command.ExecuteNonQuery();
+                command.CommandText = @"CREATE VIEW IF NOT EXISTS CurrentMonthNet AS SELECT SUM(CASE WHEN Type = 0 THEN Amount ELSE -Amount END) AS Net FROM Records WHERE strftime('%Y-%m',Date) = strftime('%Y-%m','now')";
+                command.ExecuteNonQuery();
+                command.CommandText = @"CREATE VIEW IF NOT EXISTS CurrentMonthIncome AS SELECT SUM(Amount) AS Income FROM Records WHERE strftime('%Y-%m',Date) = strftime('%Y-%m','now') AND Type = 0";
+                command.ExecuteNonQuery();
+                command.CommandText = @"CREATE VIEW IF NOT EXISTS CurrentMonthExpense AS SELECT SUM(Amount) AS Expense FROM Records WHERE strftime('%Y-%m',Date) = strftime('%Y-%m','now') AND Type = 1";
+                command.ExecuteNonQuery();
+                command.CommandText = @"CREATE VIEW IF NOT EXISTS TotalBalance AS SELECT SUM(CASE WHEN Type = 0 THEN Amount ELSE -Amount END) AS Balance FROM Records"; 
+                command.ExecuteNonQuery();
+
             }
         }
         /**
@@ -43,7 +55,7 @@ namespace JuanNotTheHuman.Spending.Services
          */
         public static async Task<List<Record>> GetRecordsAsync()
         {
-            using (var connection = new SqliteConnection("Data Source=spending.db"))
+            using (var connection = new SqliteConnection(_connectionString))
             {
                 await connection.OpenAsync();
                 var command = connection.CreateCommand();
@@ -60,7 +72,8 @@ namespace JuanNotTheHuman.Spending.Services
                             Amount = reader.GetDecimal(2),
                             Date = DateTime.Parse(reader.GetString(3)),
                             Category = (Category)reader.GetInt32(4),
-                            Type = (RecordType)reader.GetInt32(5)
+                            Type = (RecordType)reader.GetInt32(5),
+                            Image = reader.IsDBNull(6) ? null : (byte[])reader["Image"]
                         };
                         records.Add(record);
                     }
@@ -76,7 +89,7 @@ namespace JuanNotTheHuman.Spending.Services
          */
         public static async Task<List<Record>> GetRecordsByCategoryAsync(Category category)
         {
-            using (var connection = new SqliteConnection("Data Source=spending.db"))
+            using (var connection = new SqliteConnection(_connectionString))
             {
                 await connection.OpenAsync();
                 var command = connection.CreateCommand();
@@ -102,15 +115,10 @@ namespace JuanNotTheHuman.Spending.Services
                 return records;
             }
         }
-        /**
-         * <summary>
-         * A method to retrieve records by type asynchronously.
-         * </summary>
-         * <param name="type">The type of records to filter by.</param>
-         */
+        // Poprawka dla błędu CS0030: prawidłowe pobieranie danych BLOB z czytnika
         public static async Task<List<Record>> GetRecordsByTypeAsync(RecordType type)
         {
-            using (var connection = new SqliteConnection("Data Source=spending.db"))
+            using (var connection = new SqliteConnection(_connectionString))
             {
                 await connection.OpenAsync();
                 var command = connection.CreateCommand();
@@ -121,6 +129,13 @@ namespace JuanNotTheHuman.Spending.Services
                 {
                     while (await reader.ReadAsync())
                     {
+                        byte[] image = null;
+                        if (!reader.IsDBNull(6))
+                        {
+                            long length = reader.GetBytes(6, 0, null, 0, 0);
+                            image = new byte[length];
+                            reader.GetBytes(6, 0, image, 0, (int)length);
+                        }
                         var record = new Record
                         {
                             Id = reader.GetInt32(0),
@@ -128,7 +143,8 @@ namespace JuanNotTheHuman.Spending.Services
                             Amount = reader.GetDecimal(2),
                             Date = DateTime.Parse(reader.GetString(3)),
                             Category = (Category)reader.GetInt32(4),
-                            Type = (RecordType)reader.GetInt32(5)
+                            Type = (RecordType)reader.GetInt32(5),
+                            Image = image
                         };
                         records.Add(record);
                     }
@@ -144,20 +160,27 @@ namespace JuanNotTheHuman.Spending.Services
          */
         public static async Task EditRecordAsync(Record record)
         {
-            using (var connection = new SqliteConnection("Data Source=spending.db"))
+            using (var connection = new SqliteConnection(_connectionString))
             {
                 await connection.OpenAsync();
                 var command = connection.CreateCommand();
                 command.CommandText = @"
-                    UPDATE Records
-                    SET Name = @Name, Amount = @Amount, Date = @Date, Category = @Category, Type = @Type
-                    WHERE Id = @Id";
+            UPDATE Records
+            SET Name = @Name, Amount = @Amount, Date = @Date,
+                Category = @Category, Type = @Type, Image = @Image
+            WHERE Id = @Id";
                 command.Parameters.AddWithValue("@Id", record.Id);
                 command.Parameters.AddWithValue("@Name", record.Name);
                 command.Parameters.AddWithValue("@Amount", record.Amount);
                 command.Parameters.AddWithValue("@Date", record.Date.ToString("o"));
                 command.Parameters.AddWithValue("@Category", (int)record.Category);
                 command.Parameters.AddWithValue("@Type", (int)record.Type);
+                var imageParam = command.CreateParameter();
+                imageParam.ParameterName = "@Image";
+                imageParam.SqliteType = SqliteType.Blob;
+                imageParam.Value = (object)record.Image ?? DBNull.Value;
+                command.Parameters.Add(imageParam);
+
                 await command.ExecuteNonQueryAsync();
             }
         }
@@ -169,21 +192,41 @@ namespace JuanNotTheHuman.Spending.Services
          */
         public static async Task AddRecordAsync(Record record)
         {
-            using (var connection = new SqliteConnection("Data Source=spending.db"))
+            try
             {
-                await connection.OpenAsync();
-                var command = connection.CreateCommand();
-                command.CommandText = @"
-                    INSERT INTO Records (Name, Amount, Date, Category, Type)
-                    VALUES (@Name, @Amount, @Date, @Category, @Type)";
-                command.Parameters.AddWithValue("@Name", record.Name);
-                command.Parameters.AddWithValue("@Amount", record.Amount);
-                command.Parameters.AddWithValue("@Date", record.Date.ToString("o"));
-                command.Parameters.AddWithValue("@Category", (int)record.Category);
-                command.Parameters.AddWithValue("@Type", (int)record.Type);
-                await command.ExecuteNonQueryAsync();
+                using (var connection = new SqliteConnection(_connectionString))
+                {
+                    await connection.OpenAsync();
+                    var command = connection.CreateCommand();
+                    command.CommandText = @"
+                INSERT INTO Records (Name, Amount, Date, Category, Type, Image)
+                VALUES (@Name, @Amount, @Date, @Category, @Type, @Image)";
+
+                    command.Parameters.AddWithValue("@Name", record.Name);
+                    command.Parameters.AddWithValue("@Amount", record.Amount);
+                    command.Parameters.AddWithValue("@Date", record.Date.ToString("o"));
+                    command.Parameters.AddWithValue("@Category", (int)record.Category);
+                    command.Parameters.AddWithValue("@Type", (int)record.Type);
+
+                    var imageParam = command.CreateParameter();
+                    imageParam.ParameterName = "@Image";
+                    imageParam.SqliteType = SqliteType.Blob;
+                    imageParam.Value = (object)record.Image ?? DBNull.Value;
+                    command.Parameters.Add(imageParam);
+
+                    Debug.WriteLine(record.Image == null
+                        ? "No image"
+                        : $"Image size: {record.Image.Length} bytes");
+
+                    await command.ExecuteNonQueryAsync();
+                }
+            }
+            catch (Exception ex)
+            {
+                Debug.WriteLine(ex);
             }
         }
+
         /**
          * <summary>
          * A method to delete a record from the database asynchronously.
@@ -192,7 +235,7 @@ namespace JuanNotTheHuman.Spending.Services
          */
         public static async Task DeleteRecordAsync(Record record)
         {
-            using (var connection = new SqliteConnection("Data Source=spending.db"))
+            using (var connection = new SqliteConnection(_connectionString))
             {
                 await connection.OpenAsync();
                 var command = connection.CreateCommand();
@@ -209,7 +252,7 @@ namespace JuanNotTheHuman.Spending.Services
          */
         public static async Task DeleteRecordAsync(int id)
         {
-            using (var connection = new SqliteConnection("Data Source=spending.db"))
+            using (var connection = new SqliteConnection(_connectionString))
             {
                 await connection.OpenAsync();
                 var command = connection.CreateCommand();
@@ -225,12 +268,18 @@ namespace JuanNotTheHuman.Spending.Services
          */
         public static async Task<decimal> GetCurrentMonthNet()
         {
-            var records = await GetRecordsAsync();
-            var currentMonth = DateTime.Now.Month;
-            var currentYear = DateTime.Now.Year;
-            return records
-                .Where(r => r.Date.Month == currentMonth && r.Date.Year == currentYear)
-                .Sum(r => r.Type == RecordType.Income ? r.Amount : -r.Amount);
+            using(var connection = new SqliteConnection(_connectionString))
+            {
+                await connection.OpenAsync();
+                var command = connection.CreateCommand();
+                command.CommandText = "SELECT Net FROM CurrentMonthNet";
+                var result = await command.ExecuteScalarAsync();
+                if (result != DBNull.Value && result != null)
+                {
+                    return Convert.ToDecimal(result);
+                }
+                return 0m;
+            }
         }
         /**
          * <summary>
@@ -239,12 +288,18 @@ namespace JuanNotTheHuman.Spending.Services
          */
         public static async Task<decimal> GetCurrentMonthIncome()
         {
-            var records = await GetRecordsAsync();
-            var currentMonth = DateTime.Now.Month;
-            var currentYear = DateTime.Now.Year;
-            return records
-                .Where(r => r.Date.Month == currentMonth && r.Date.Year == currentYear && r.Type == RecordType.Income)
-                .Sum(r => r.Amount);
+            using (var connection = new SqliteConnection(_connectionString))
+            {
+                await connection.OpenAsync();
+                var command = connection.CreateCommand();
+                command.CommandText = "SELECT Income FROM CurrentMonthIncome";
+                var result = await command.ExecuteScalarAsync();
+                if (result != DBNull.Value && result != null)
+                {
+                    return Convert.ToDecimal(result);
+                }
+                return 0m;
+            }
         }
         /**
          * <summary>
@@ -253,12 +308,18 @@ namespace JuanNotTheHuman.Spending.Services
          */
         public static async Task<decimal> GetCurrentMonthExpense()
         {
-            var records = await GetRecordsAsync();
-            var currentMonth = DateTime.Now.Month;
-            var currentYear = DateTime.Now.Year;
-            return records
-                .Where(r => r.Date.Month == currentMonth && r.Date.Year == currentYear && r.Type == RecordType.Expense)
-                .Sum(r => r.Amount);
+            using (var connection = new SqliteConnection(_connectionString))
+            {
+                await connection.OpenAsync();
+                var command = connection.CreateCommand();
+                command.CommandText = "SELECT Expense FROM CurrentMonthExpense";
+                var result = await command.ExecuteScalarAsync();
+                if (result != DBNull.Value && result != null)
+                {
+                    return Convert.ToDecimal(result);
+                }
+                return 0m;
+            }
         }
         /**
          * <summary>
@@ -267,8 +328,18 @@ namespace JuanNotTheHuman.Spending.Services
          */
         public static async Task<decimal> GetTotalBalance()
         {
-            var records = await GetRecordsAsync();
-            return records.Sum(r => r.Type == RecordType.Income ? r.Amount : -r.Amount);
+            using (var connection = new SqliteConnection(_connectionString))
+            {
+                await connection.OpenAsync();
+                var command = connection.CreateCommand();
+                command.CommandText = "SELECT Balance FROM TotalBalance";
+                var result = await command.ExecuteScalarAsync();
+                if (result != DBNull.Value && result != null)
+                {
+                    return Convert.ToDecimal(result);
+                }
+                return 0m;
+            }
         }
         /**
          * <summary>
@@ -319,7 +390,8 @@ namespace JuanNotTheHuman.Spending.Services
                     ("Amount", "REAL"),
                     ("Date", "TEXT"),
                     ("Category", "INTEGER"),
-                    ("Type", "INTEGER")
+                    ("Type", "INTEGER"),
+                    ("Image","BLOB")
                 }.OrderBy(x => x.Item1).ToList();
                 var results = new List<ImportResult>();
                 foreach (string tableName in tables)
@@ -356,16 +428,16 @@ namespace JuanNotTheHuman.Spending.Services
                 }
                 if (results.Count == 0)
                 {
-                    MessageBox.Show("No tables found in the database.");
+                    MessageBox.Show(LocalizationService.Instance["NoTablesMessage"]);
                     return Task.CompletedTask;
                 }
-                var message = new StringBuilder("Import Results:\n");
+                var message = new StringBuilder($"{LocalizationService.Instance["DatabaseImportResultsTitle"]}:\n");
                 foreach (var result in results)
                 {
-                    message.AppendLine($"{result.Name}: {(result.Matches ? "Matches" : "Does not match")}");
+                    message.AppendLine($"{result.Name}: {(result.Matches ? LocalizationService.Instance["Matches"] : LocalizationService.Instance["NotMatches"])}");
                 }
-                message.AppendLine("\nDo you want to import the data?");
-                bool res = NotificationService.AskConfirmation("Import Results", message.ToString());
+                message.AppendLine($"\n{LocalizationService.Instance["ImportDataQuestion"]}");
+                bool res = NotificationService.AskConfirmation(LocalizationService.Instance["DatabaseImportResultsTitle"], message.ToString());
                 if (res)
                 {
                     var ImportTables = results.Where(r => r.Matches).Select(r => r.Name).ToList();
@@ -373,7 +445,7 @@ namespace JuanNotTheHuman.Spending.Services
                     {
                         using (var importCommand = connection.CreateCommand())
                         {
-                            importCommand.CommandText = $"SELECT (Name,Amount,Date,Category,Type) FROM {importTableName}";
+                            importCommand.CommandText = $"SELECT (Name,Amount,Date,Category,Type,Image) FROM {importTableName}";
                             using (var reader = importCommand.ExecuteReader())
                             {
                                 while (reader.Read())
@@ -391,7 +463,7 @@ namespace JuanNotTheHuman.Spending.Services
                             }
                         }
                     }
-                    NotificationService.ShowNotification("Import Successful", "The database has been successfully imported.");
+                    NotificationService.ShowNotification(LocalizationService.Instance["DatabaseImportSuccessTitle"], LocalizationService.Instance["DatabaseImportSuccessText"]);
                 }
             }
             return Task.CompletedTask;
@@ -404,19 +476,19 @@ namespace JuanNotTheHuman.Spending.Services
          */
         public static Task ExportDatabase(string filePath)
         {
-            File.Copy("spending.db", filePath, true);
+            File.Copy(_connectionString, filePath, true);
             return Task.CompletedTask;
         }
         public static Task Clear()
         {
-            using (var connection = new SqliteConnection("Data Source=spending.db"))
+            using (var connection = new SqliteConnection(_connectionString))
             {
                 connection.Open();
                 var command = connection.CreateCommand();
                 command.CommandText = "DELETE FROM Records";
                 command.ExecuteNonQuery();
             }
-            NotificationService.ShowNotification("Database Cleared", "All records have been cleared from the database.");
+            NotificationService.ShowNotification(LocalizationService.Instance["DatabaseClearedTitle"], LocalizationService.Instance["DatabaseClearedText"]);
             return Task.CompletedTask;
         }
     }

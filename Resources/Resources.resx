@@ -243,9 +243,6 @@
   <data name="ExportDatabaseButton" xml:space="preserve">
     <value>Export</value>
   </data>
-  <data name="AddNewRecord" xml:space="preserve">
-    <value>Add New Record</value>
-  </data>
   <data name="Type" xml:space="preserve">
     <value>Type:</value>
   </data>
@@ -272,5 +269,83 @@
   </data>
   <data name="ClearDatabaseButton" xml:space="preserve">
     <value>Clear</value>
+  </data>
+  <data name="DatabaseImportSuccessTitle" xml:space="preserve">
+    <value>Import Successful</value>
+  </data>
+  <data name="DatabaseImportSuccessText" xml:space="preserve">
+    <value>Database successfully imported.</value>
+  </data>
+  <data name="DatabaseClearedTitle" xml:space="preserve">
+    <value>Database cleared</value>
+  </data>
+  <data name="DatabaseClearedText" xml:space="preserve">
+    <value>All records have been deleted from the database</value>
+  </data>
+  <data name="DatabaseImportResultsTitle" xml:space="preserve">
+    <value>Import result</value>
+  </data>
+  <data name="Matches" xml:space="preserve">
+    <value>Matches</value>
+  </data>
+  <data name="NotMatches" xml:space="preserve">
+    <value>Doesn't match</value>
+  </data>
+  <data name="ImportDataQuestion" xml:space="preserve">
+    <value>Do you want to import data from matching tables?</value>
+  </data>
+  <data name="NoTablesMessage" xml:space="preserve">
+    <value>No tables found in database.</value>
+  </data>
+  <data name="AddNewRecord" xml:space="preserve">
+    <value>Add New Record</value>
+  </data>
+  <data name="DeleteRecordTitle" xml:space="preserve">
+    <value>Delete Record</value>
+  </data>
+  <data name="DeleteRecordText" xml:space="preserve">
+    <value>Are you sure you want to delete this record?</value>
+  </data>
+  <data name="Error" xml:space="preserve">
+    <value>Error</value>
+  </data>
+  <data name="Success" xml:space="preserve">
+    <value>Success</value>
+  </data>
+  <data name="DatabaseExportSuccessText" xml:space="preserve">
+    <value>Database exported successfully</value>
+  </data>
+  <data name="ClearDatabaseTitle" xml:space="preserve">
+    <value>Clear database</value>
+  </data>
+  <data name="ClearDatabaseConfirmationText" xml:space="preserve">
+    <value>Are you sure you want to clear the database? This action cannot be undone.</value>
+  </data>
+  <data name="DatabaseEmptyText" xml:space="preserve">
+    <value>The database is empty.</value>
+  </data>
+  <data name="BackupDatabaseTitle" xml:space="preserve">
+    <value>Backup database</value>
+  </data>
+  <data name="BackupDatabaseText" xml:space="preserve">
+    <value>Do you want to create a backup of the database?</value>
+  </data>
+  <data name="Confirm" xml:space="preserve">
+    <value>Confirm</value>
+  </data>
+  <data name="Cancel" xml:space="preserve">
+    <value>Cancel</value>
+  </data>
+  <data name="ImagePreview" xml:space="preserve">
+    <value>Image Preview</value>
+  </data>
+  <data name="UploadImageText" xml:space="preserve">
+    <value>Upload image</value>
+  </data>
+  <data name="UploadImageButton" xml:space="preserve">
+    <value>Upload</value>
+  </data>
+  <data name="IsImageUploaded" xml:space="preserve">
+    <value>Uploaded Image:</value>
   </data>
 </root>

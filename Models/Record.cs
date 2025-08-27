@@ -45,16 +45,18 @@ namespace JuanNotTheHuman.Spending.Models
          * </summary>
          */
         public RecordType Type { get; set; }
+        public byte[] Image { get; set; }
 
-        public Record(string name, decimal amount, DateTime date, Category category, RecordType type)
+        public Record(string name, decimal amount, DateTime date, Category category, RecordType type, byte[] image)
         {
             Name = name;
             Amount = amount;
             Date = date;
             Category = category;
             Type = type;
+            Image = image;
         }
-        public Record(int id, string name, decimal amount, DateTime date, Category category, RecordType type)
+        public Record(int id, string name, decimal amount, DateTime date, Category category, RecordType type, byte[] image)
         {
             Id = id;
             Name = name;
@@ -62,6 +64,7 @@ namespace JuanNotTheHuman.Spending.Models
             Date = date;
             Category = category;
             Type = type;
+            Image = image;
         }
 
         public Record() { }

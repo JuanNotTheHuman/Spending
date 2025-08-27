@@ -243,9 +243,6 @@
   <data name="ExportDatabaseButton" xml:space="preserve">
     <value>Eksportuj</value>
   </data>
-  <data name="AddNewRecord" xml:space="preserve">
-    <value>Dodaj nową operację</value>
-  </data>
   <data name="Type" xml:space="preserve">
     <value>Typ:</value>
   </data>
@@ -272,5 +269,83 @@
   </data>
   <data name="ClearDatabaseButton" xml:space="preserve">
     <value>Wyczyść</value>
+  </data>
+  <data name="DatabaseImportSuccessTitle" xml:space="preserve">
+    <value>Poprawne załadowanie</value>
+  </data>
+  <data name="DatabaseImportSuccessText" xml:space="preserve">
+    <value>Baza danych pomyślnie zaimportowana.</value>
+  </data>
+  <data name="DatabaseClearedTitle" xml:space="preserve">
+    <value>Wyczyszczono bazę danych</value>
+  </data>
+  <data name="DatabaseClearedText" xml:space="preserve">
+    <value>Usunięto wszystkie operacje z bazy danych.</value>
+  </data>
+  <data name="DatabaseImportResultsTitle" xml:space="preserve">
+    <value>Wyniki importu</value>
+  </data>
+  <data name="Matches" xml:space="preserve">
+    <value>Pasuje</value>
+  </data>
+  <data name="NotMatches" xml:space="preserve">
+    <value>Nie pasuje</value>
+  </data>
+  <data name="ImportDataQuestion" xml:space="preserve">
+    <value>Chcesz zaimportować dane z pasujących tabeli?</value>
+  </data>
+  <data name="NoTablesMessage" xml:space="preserve">
+    <value>W bazie danych nie znaleziono żadnych tabeli.</value>
+  </data>
+  <data name="AddNewRecord" xml:space="preserve">
+    <value>Dodaj nową operację</value>
+  </data>
+  <data name="DeleteRecordTitle" xml:space="preserve">
+    <value>Usuń operację</value>
+  </data>
+  <data name="DeleteRecordText" xml:space="preserve">
+    <value>Na pewno chcesz usunąć tą operację?</value>
+  </data>
+  <data name="Error" xml:space="preserve">
+    <value>Błąd</value>
+  </data>
+  <data name="Success" xml:space="preserve">
+    <value>Powodzenie</value>
+  </data>
+  <data name="DatabaseExportSuccessText" xml:space="preserve">
+    <value>Baza danych wyeksportowana poprawnie.</value>
+  </data>
+  <data name="ClearDatabaseTitle" xml:space="preserve">
+    <value>Wyczyść bazę danych</value>
+  </data>
+  <data name="ClearDatabaseConfirmationText" xml:space="preserve">
+    <value>Na pewno chcesz wyczyścić bazę danych? Ta operacja nie może być cofnięta.</value>
+  </data>
+  <data name="DatabaseEmptyText" xml:space="preserve">
+    <value>Baza danych jest pusta</value>
+  </data>
+  <data name="BackupDatabaseTitle" xml:space="preserve">
+    <value>Stwórz kopię zapasową bazy danych</value>
+  </data>
+  <data name="BackupDatabaseText" xml:space="preserve">
+    <value>Chcesz stworzyć kopię zapasową bazy danych?</value>
+  </data>
+  <data name="Confirm" xml:space="preserve">
+    <value>Zatwierdź</value>
+  </data>
+  <data name="Cancel" xml:space="preserve">
+    <value>Anuluj</value>
+  </data>
+  <data name="ImagePreview" xml:space="preserve">
+    <value>Podgląd Obrazu</value>
+  </data>
+  <data name="UploadImageText" xml:space="preserve">
+    <value>Dodaj zdjęcie</value>
+  </data>
+  <data name="UploadImageButton" xml:space="preserve">
+    <value>Dodaj</value>
+  </data>
+  <data name="IsImageUploaded" xml:space="preserve">
+    <value>Dodano zdjęcie:</value>
   </data>
 </root>
